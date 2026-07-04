@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Juttr — Never Lose Interest. Never Lose Focus. | Private Workspace in Your New Tab</title>
+  <meta name="description" content="Juttr is the private, local-first workspace in your new tab. Capture ideas, links, and tasks without breaking focus — then return when it's time. No account, no cloud, works offline." />
+  <meta name="keywords" content="productivity chrome extension, capture ideas browser, tab manager alternative, browser workspace, focus timer, pomodoro chrome extension, task manager extension, distraction free workspace, local first app, deep work tool, all in one workspace chrome, no cloud task manager, save tabs for later" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Juttr — Never Lose Interest. Never Lose Focus." />
+  <meta property="og:description" content="Capture now. Focus now. Return later. The private workspace in your new tab — no account, no cloud, all local." />
+  <meta property="og:image" content="https://www.juttr.cc/assets/screens/og-cover.jpg" />
+  <meta property="og:url" content="https://www.juttr.cc" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@Juttr_Ext" />
+  <meta name="twitter:title" content="Juttr — Never Lose Interest. Never Lose Focus." />
+  <meta name="twitter:description" content="Capture ideas without breaking focus. The local-first workspace in your new tab — no account, no cloud." />
+  <meta name="twitter:image" content="https://www.juttr.cc/assets/screens/og-cover.jpg" />
+
+  <link rel="canonical" href="https://www.juttr.cc" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+
+  <!-- Set theme before paint (no flash) -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('juttr-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+
+  <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/preserved.css" />
+  <link rel="stylesheet" href="css/site.css" />
+
+  <!-- Schema.org structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Juttr",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "Chrome, Edge, Firefox",
+    "offers": [
+      { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+      { "@type": "Offer", "name": "Pro Annual", "price": "24", "priceCurrency": "USD", "billingIncrement": "year" },
+      { "@type": "Offer", "name": "Pro Monthly", "price": "3", "priceCurrency": "USD", "billingIncrement": "month" }
+    ],
+    "description": "Local-first productivity workspace Chrome extension for developers and designers.",
+    "url": "https://www.juttr.cc"
+  }
+  </script>
+</head>
+<body>
+
+<!-- ════════════════ NAV (C) ════════════════ -->
+<nav class="jx-nav" id="nav">
+  <a href="#top" class="jx-logo"><img src="assets/logo.png" alt="Juttr logo" /> Juttr</a>
+  <div class="jx-nav-links" id="nav-links">
+    <a href="#features">Features</a>
+    <a href="#see-it">See it in action</a>
+    <a href="#philosophy">Why Juttr</a>
+    <a href="#personalize">Personalize</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#blog">Blog</a>
+    <a href="login.html">Log in</a>
+    <a class="jx-btn jx-btn-accent jx-btn-sm jx-nav-cta-m" data-store-link="nav-menu" target="_blank" rel="noopener">Get Juttr for Chrome</a>
+  </div>
+  <div class="jx-nav-right">
+    <button class="jx-toggle" id="theme-toggle" type="button" aria-label="Toggle light or dark mode">
+      <span class="jx-toggle-icon jx-moon" aria-hidden="true">🌙</span>
+      <span class="jx-toggle-icon jx-sun" aria-hidden="true">☀️</span>
+      <span class="jx-lbl jx-lbl-dark">Dark</span>
+      <span class="jx-lbl jx-lbl-light">Light</span>
+    </button>
+    <a class="jx-btn jx-btn-accent jx-btn-sm jx-nav-cta-d" data-store-link="nav" target="_blank" rel="noopener">Get Juttr for Chrome</a>
+    <button class="jx-nav-toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<span id="top"></span>
+
+<main>
+
+<!-- ════════════════ HERO (D) ════════════════ -->
+<header class="jx-hero">
+  <div class="jx-hero-inner reveal">
+    <h1>Never Lose Interest.<br /><em>Never Lose Focus.</em></h1>
+    <p class="jx-hero-sub">
+      Juttr is the private workspace in your new tab. Capture ideas, links, and tasks the
+      moment they arrive — without breaking focus — then return when it's time.
+      Tasks, boards, notes, focus timer, and calendar. No cloud. No tracking. No context switching.
+    </p>
+    <div class="jx-hero-actions">
+      <a class="jx-btn jx-btn-accent jx-btn-lg" data-store-link="hero" target="_blank" rel="noopener">Get Juttr for Chrome</a>
+      <a class="jx-btn jx-btn-outline jx-btn-lg" href="#philosophy">Why Juttr →</a>
+    </div>
+    <div class="jx-trust">
+      <span>✓ No account required</span>
+      <span>✓ Works offline</span>
+      <span>✓ Your data never leaves your device</span>
+    </div>
+  </div>
+  <div class="jx-hero-visual reveal">
+    <img src="assets/screens/dark-dashboard.webp" width="1600" height="1000" data-parallax="0.05"
+         alt="Juttr productivity Chrome extension workspace showing task manager, calendar and focus timer" />
+  </div>
+</header>
+
+<!-- ════════════════ FEATURES (E) ════════════════ -->
+<section class="jx-section jx-features" id="features">
+  <div class="jx-wrap">
+    <div class="jx-section-head reveal">
+      <p class="jx-eyebrow">Ten modules, one tab</p>
+      <h2 class="jx-h2">Everything a developer or designer needs — without the tab overload</h2>
+    </div>
+    <div class="jx-feature-grid reveal">
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5l1.8 1.8L9 5"/><path d="M4 14.5l1.8 1.8L9 13"/><path d="M13 7h7M13 15h7"/></svg></div>
+        <h3>Tasks</h3>
+        <p>Lightning-fast task entry with keyboard shortcuts.</p>
+        <span class="jx-badge">Free · 15</span> <span class="jx-badge jx-badge-pro">Pro · Unlimited</span>
+      </div>
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h9l5 5v13H5z"/><path d="M14 3v5h5"/><path d="M8 13h7M8 17h5"/></svg></div>
+        <h3>Notes</h3>
+        <p>Distraction-free markdown workspace for ideas.</p>
+        <span class="jx-badge">Free · 1 category</span> <span class="jx-badge jx-badge-pro">Pro · Unlimited</span>
+      </div>
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="5" height="7" rx="1.5"/></svg></div>
+        <h3>Boards</h3>
+        <p>Drag-and-drop agile kanban for your projects.</p>
+        <span class="jx-badge">Free · 3</span> <span class="jx-badge jx-badge-pro">Pro · Unlimited</span>
+      </div>
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 1h6" stroke-linecap="round"/></svg></div>
+        <h3>Focus Timer</h3>
+        <p>Built-in Pomodoro timer to protect deep work time.</p>
+        <span class="jx-badge">Free · Basic</span> <span class="jx-badge jx-badge-pro">Pro · Custom + history</span>
+      </div>
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9h18M8 2.5v4M16 2.5v4" stroke-linecap="round"/></svg></div>
+        <h3>Calendar</h3>
+        <p>Click-to-mark scheduling with a visual timeline.</p>
+        <span class="jx-badge">Free &amp; Pro</span>
+      </div>
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></div>
+        <h3>Dashboard</h3>
+        <p>Real-time overview of your workspace velocity.</p>
+        <span class="jx-badge">Free · Basic</span> <span class="jx-badge jx-badge-pro">Pro · Full metrics</span>
+      </div>
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2z"/></svg></div>
+        <h3>Tools</h3>
+        <p>7 dev &amp; design utilities built into the tab.</p>
+        <span class="jx-badge">Free · 1 category</span> <span class="jx-badge jx-badge-pro">Pro · All</span>
+      </div>
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+        <h3>Analytics</h3>
+        <p>On-device productivity data. Private by design.</p>
+        <span class="jx-badge jx-badge-pro">Pro only</span>
+      </div>
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h6a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+        <h3>Files</h3>
+        <p>Local asset manager for links, files, and resources.</p>
+        <span class="jx-badge">Free &amp; Pro</span>
+      </div>
+
+      <div class="jx-feature-card">
+        <div class="jx-feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1.2" fill="currentColor"/><circle cx="12" cy="8" r="1.2" fill="currentColor"/><circle cx="16" cy="10" r="1.2" fill="currentColor"/><path d="M12 21a3 3 0 0 1 0-6 2 2 0 0 0 2-2"/></svg></div>
+        <h3>Themes</h3>
+        <p>Choose your workspace aesthetic.</p>
+        <span class="jx-badge">Free · 1</span> <span class="jx-badge jx-badge-pro">Pro · All + custom</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ SEE IT IN ACTION (F — preserved #apps) ════════════════ -->
+<div class="jx-island-head reveal" id="see-it">
+  <h2 class="jx-h2">See it in action</h2>
+</div>
+<div class="juttr-island">
+  <section class="section apps" id="apps">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Ten apps, one workspace</p>
+        <h2 class="section-title">Everything you open all day,<br />now in a single tab.</h2>
+        <p class="section-sub">Juttr bundles the tools you'd otherwise juggle across ten sites — and keeps every one of them on your own machine.</p>
+      </div>
+      <div class="showcase reveal">
+        <div class="showcase-rail" id="showcaseRail" role="tablist" aria-label="Juttr apps">
+          <!-- buttons injected by widgets.js -->
+        </div>
+        <div class="showcase-stage">
+          <div class="browser-frame">
+            <div class="bf-bar">
+              <span class="bf-dot bf-r"></span><span class="bf-dot bf-y"></span><span class="bf-dot bf-g"></span>
+              <span class="bf-url" id="showcaseUrl">New Tab — Juttr</span>
+            </div>
+            <div class="bf-shot showcase-shot" id="showcaseShot">
+              <!-- images injected by widgets.js -->
+            </div>
+          </div>
+          <p class="showcase-caption" id="showcaseCaption"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════ PHILOSOPHY (§6.4 — "Juttr is not a blocker") ════════════════ -->
+<section class="jx-section jx-philosophy" id="philosophy">
+  <div class="jx-wrap">
+    <div class="jx-section-head reveal">
+      <p class="jx-eyebrow">The philosophy</p>
+      <h2 class="jx-h2">Juttr is not a blocker.</h2>
+      <p class="jx-sub">
+        Blockers treat your curiosity like a problem. We treat it like inventory.
+        Your ideas are not distractions — they just need the right time.
+      </p>
+    </div>
+
+    <div class="jx-vs-grid reveal">
+      <div class="jx-vs-card">
+        <span class="jx-vs-no">Not this</span>
+        <p>Block the internet and hope the impulse dies.</p>
+        <span class="jx-vs-yes">This</span>
+        <p class="jx-vs-right">Capture the impulse in two seconds and return when you choose.</p>
+      </div>
+      <div class="jx-vs-card">
+        <span class="jx-vs-no">Not this</span>
+        <p>Another app to check, another inbox to forget.</p>
+        <span class="jx-vs-yes">This</span>
+        <p class="jx-vs-right">The tab you already open 100&times; a day becomes the workspace.</p>
+      </div>
+      <div class="jx-vs-card">
+        <span class="jx-vs-no">Not this</span>
+        <p>Your saves and notes mined on someone's server.</p>
+        <span class="jx-vs-yes">This</span>
+        <p class="jx-vs-right">Everything stays on your device. There is nothing to send.</p>
+      </div>
+    </div>
+
+    <!-- Campaign band (§6.3) — links to Instagram -->
+    <div class="jx-poster-band reveal">
+      <a class="jx-poster" href="https://www.instagram.com/juttr_ext/" target="_blank" rel="noopener" aria-label="Juttr on Instagram — It starts with one tab">
+        <span class="jx-poster-head">It starts with <em>one tab</em>.</span>
+        <span class="jx-poster-sub">Then five. Then twelve.</span>
+      </a>
+      <a class="jx-poster" href="https://www.instagram.com/juttr_ext/" target="_blank" rel="noopener" aria-label="Juttr on Instagram — Your workspace should not phone home">
+        <span class="jx-poster-head">Your workspace should not <em>phone home</em>.</span>
+        <span class="jx-poster-sub">No account. No cloud. No telemetry.</span>
+      </a>
+      <a class="jx-poster" href="https://www.instagram.com/juttr_ext/" target="_blank" rel="noopener" aria-label="Juttr on Instagram — Capture now, focus now, return later">
+        <span class="jx-poster-head">Capture now. Focus now. <em>Return later</em>.</span>
+        <span class="jx-poster-sub">The three-beat system.</span>
+      </a>
+    </div>
+    <p class="jx-poster-follow reveal">
+      One idea like this, every day →
+      <a href="https://www.instagram.com/juttr_ext/" target="_blank" rel="noopener">Follow @juttr_ext</a>
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════ PERSONALIZE / THEMES (H — preserved #themes) ════════════════ -->
+<div class="jx-island-head reveal" id="personalize">
+  <h2 class="jx-h2">Built to look as good as it works</h2>
+</div>
+<div class="juttr-island" data-parallax="0.03">
+  <section class="section themes" id="themes">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <p class="eyebrow">Your workspace, your look</p>
+        <h2 class="section-title">Light, dark, or entirely your own.</h2>
+        <p class="section-sub">Juttr ships in pure light and dark. Then you take over — drop in any wallpaper and dial accent, transparency and blur until it feels like yours.</p>
+      </div>
+      <div class="theme-demo reveal">
+        <div class="theme-controls">
+          <div class="ctrl">
+            <span class="ctrl-label">Base theme</span>
+            <div class="seg" id="modePills">
+              <button class="seg-btn active" data-mode="dark">Dark</button>
+              <button class="seg-btn" data-mode="light">Light</button>
+            </div>
+          </div>
+          <div class="ctrl">
+            <span class="ctrl-label">Accent</span>
+            <div class="swatches" id="swatches">
+              <button class="swatch active" data-color="#2dd4bf" style="--c:#2dd4bf"></button>
+              <button class="swatch" data-color="#5b8def" style="--c:#5b8def"></button>
+              <button class="swatch" data-color="#f472b6" style="--c:#f472b6"></button>
+              <button class="swatch" data-color="#fbbf24" style="--c:#fbbf24"></button>
+              <button class="swatch" data-color="#a78bfa" style="--c:#a78bfa"></button>
+            </div>
+          </div>
+          <div class="ctrl grow">
+            <span class="ctrl-label">Panel opacity <em id="opacityVal">78%</em></span>
+            <input type="range" id="opacitySlider" min="10" max="100" value="78" />
+          </div>
+          <div class="ctrl grow">
+            <span class="ctrl-label">Background blur <em id="blurVal">14px</em></span>
+            <input type="range" id="blurSlider" min="0" max="32" value="14" />
+          </div>
+          <label class="upload-btn">
+            <svg viewBox="0 0 24 24" width="15" height="15"><path d="M12 16V5m0 0L8 9m4-4 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 16v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Wallpaper
+            <input type="file" id="bgUpload" accept="image/*" hidden />
+          </label>
+        </div>
+
+        <div class="theme-preview" id="themePreview">
+          <div class="tp-bg" id="tpBg"></div>
+          <div class="tp-overlay" id="tpOverlay"></div>
+          <div class="tp-ui" id="tpUi">
+            <aside class="tp-side">
+              <div class="tp-brand">
+                <span class="tp-brand-mark"></span>
+                <span class="tp-brand-name">Juttr</span>
+              </div>
+              <nav class="tp-nav">
+                <span class="tp-nav-item active">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9.5h12V10"/></svg>
+                  <span>Dashboard</span>
+                </span>
+                <span class="tp-nav-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.4 12l2.3 2.3 4.6-4.8"/></svg>
+                  <span>Tasks</span>
+                </span>
+                <span class="tp-nav-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.3"/></svg>
+                  <span>Focus</span>
+                </span>
+                <span class="tp-nav-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3.5v4M16 3.5v4" stroke-linecap="round"/></svg>
+                  <span>Calendar</span>
+                </span>
+                <span class="tp-nav-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="4" width="6.5" height="16" rx="1.6"/><rect x="14" y="4" width="6.5" height="9" rx="1.6"/></svg>
+                  <span>Boards</span>
+                </span>
+                <span class="tp-nav-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3.5h9l5 5V20.5H5z"/><path d="M14 3.5v5h5" stroke-linecap="round"/></svg>
+                  <span>Notes</span>
+                </span>
+              </nav>
+              <span class="tp-nav-item tp-nav-foot">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M19.3 14.2a7.4 7.4 0 0 0 0-4.4l1.6-1.3-1.7-2.9-1.9.8a7.4 7.4 0 0 0-3.8-2.2L13.1 2h-2.2l-.4 2.2a7.4 7.4 0 0 0-3.8 2.2l-1.9-.8L3.1 8.5l1.6 1.3a7.4 7.4 0 0 0 0 4.4l-1.6 1.3 1.7 2.9 1.9-.8a7.4 7.4 0 0 0 3.8 2.2l.4 2.2h2.2l.4-2.2a7.4 7.4 0 0 0 3.8-2.2l1.9.8 1.7-2.9z"/></svg>
+                <span>Settings</span>
+              </span>
+            </aside>
+            <div class="tp-main">
+              <div class="tp-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-3.6-3.6" stroke-linecap="round"/></svg>
+                <span class="tp-search-text">Search or type /command</span>
+                <span class="tp-kbd">⌘K</span>
+              </div>
+              <div class="tp-grid">
+                <div class="tp-card tp-w">
+                  <div class="tp-w-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="7"/><path d="M12 13V9.5M9 3h6" stroke-linecap="round"/></svg>
+                    Focus Timer
+                  </div>
+                  <div class="tp-seg">
+                    <span class="tp-seg-btn active">Focus</span>
+                    <span class="tp-seg-btn">Short</span>
+                    <span class="tp-seg-btn">Long</span>
+                  </div>
+                  <span class="tp-timer">17:42</span>
+                  <span class="tp-play">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>
+                  </span>
+                </div>
+
+                <div class="tp-card tp-w">
+                  <div class="tp-w-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.4 12l2.3 2.3 4.6-4.8"/></svg>
+                    Tasks
+                  </div>
+                  <span class="tp-count">6 Active</span>
+                  <div class="tp-task">
+                    <span class="tp-task-dot"></span>
+                    <span class="tp-task-body"><b>Deep work block</b><i>09:00 AM</i></span>
+                  </div>
+                  <div class="tp-task">
+                    <span class="tp-task-dot"></span>
+                    <span class="tp-task-body"><b>Design sync</b><i>02:00 PM</i></span>
+                  </div>
+                  <div class="tp-add">+ Add task</div>
+                </div>
+
+                <div class="tp-card tp-w tp-cal">
+                  <div class="tp-w-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3.5v4M16 3.5v4" stroke-linecap="round"/></svg>
+                    Calendar
+                  </div>
+                  <span class="tp-month">October</span>
+                  <div class="tp-week"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+                  <div class="tp-days">
+                    <span></span><span></span><span></span><span>1</span><span>2</span><span>3</span><span>4</span>
+                    <span>5</span><span>6</span><span class="today">7</span><span>8</span><span>9</span><span>10</span><span>11</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════ PRICING (G) ════════════════ -->
+<section class="jx-section" id="pricing">
+  <div class="jx-wrap">
+    <div class="jx-section-head reveal">
+      <p class="jx-eyebrow">Simple pricing</p>
+      <h2 class="jx-h2">Simple pricing. No surprises.</h2>
+    </div>
+    <div class="jx-price-grid reveal">
+
+      <!-- Free -->
+      <div class="jx-price-card">
+        <p class="jx-price-name">Free</p>
+        <p class="jx-price-amount"><span class="jx-price-num">$0</span><span class="jx-price-per">/ forever</span></p>
+        <ul class="jx-price-list">
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 10 tasks</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 1 note category (10 notes)</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 2 boards (3 sections · 3 columns)</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Focus timer with 2 music channels</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Full calendar access</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Full dashboard, analytics &amp; files</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 2 tool categories</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 2 identities · 4 saved services</li>
+          <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg> Unlimited everything</li>
+          <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg> All themes + custom colors</li>
+        </ul>
+        <div class="jx-price-actions">
+          <a class="jx-btn jx-btn-ghost jx-btn-lg" data-store-link="pricing-free" target="_blank" rel="noopener">Add to Chrome — Free</a>
+        </div>
+      </div>
+
+      <!-- Pro -->
+      <div class="jx-price-card jx-price-card-pro">
+        <span class="jx-price-badge">BEST VALUE</span>
+        <p class="jx-price-name">⭐ Pro — Annual</p>
+        <p class="jx-price-amount"><span class="jx-price-num">$24</span><span class="jx-price-per">/ first year</span></p>
+        <p class="jx-price-note">billed annually · renews at <strong>$49 / year</strong></p>
+        <ul class="jx-price-list">
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Everything in Free, plus:</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited tasks</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited notes &amp; categories</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited boards, sections &amp; columns</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited music links in Focus</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited tool categories</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited identities &amp; services</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> All themes + custom colors</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Works on 2 browsers at once</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Priority email support</li>
+        </ul>
+        <div class="jx-price-actions">
+          <a class="jx-btn jx-btn-accent jx-btn-lg" href="login.html?intent=upgrade&amp;plan=annual">Get Pro — $24 first year</a>
+          <a class="jx-btn jx-btn-outline" href="login.html?intent=upgrade&amp;plan=monthly">Monthly — $3/mo for 12 months, then $5/mo</a>
+        </div>
+      </div>
+
+    </div>
+    <p class="jx-price-foot">Payments secured by Stripe · Cancel anytime · Sign in with Google — one account for the extension and web</p>
+  </div>
+</section>
+
+<!-- ════════════════ THE SCIENCE (I) ════════════════ -->
+<section class="jx-section jx-science">
+  <div class="jx-wrap">
+    <div class="jx-section-head reveal">
+      <p class="jx-eyebrow">The science of focus</p>
+      <h2 class="jx-h2">Your brain wasn't built to multitask. Juttr was built for that reality.</h2>
+    </div>
+    <div class="jx-stat-grid reveal">
+      <div class="jx-stat-card">
+        <div class="jx-stat-num">40%</div>
+        <p class="jx-stat-label">Productivity loss from multitasking</p>
+        <p class="jx-stat-src">— American Psychological Association</p>
+      </div>
+      <div class="jx-stat-card">
+        <div class="jx-stat-num">2.1 hrs</div>
+        <p class="jx-stat-label">Lost daily to interruptions &amp; context switching</p>
+        <p class="jx-stat-src">— Basex Research, Knowledge Workers Study</p>
+      </div>
+      <div class="jx-stat-card">
+        <div class="jx-stat-num">97.5%</div>
+        <p class="jx-stat-label">Of people perform worse when multitasking</p>
+        <p class="jx-stat-src">— University of Utah, Journal of Psychology</p>
+      </div>
+    </div>
+    <p class="jx-science-body reveal">
+      Juttr doesn't try to help you do more at once — it helps you do one thing completely.
+      A dedicated focus timer protects your deep work time. A distraction-free workspace keeps
+      your tasks, notes, and tools in one place so your brain stops juggling open loops.
+      Clearer workspace. Clearer mind.
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════ BLOG (J) ════════════════ -->
+<section class="jx-section" id="blog">
+  <div class="jx-wrap">
+    <div class="jx-section-head reveal">
+      <p class="jx-eyebrow">Writing</p>
+      <h2 class="jx-h2">From the Juttr Blog</h2>
+      <p class="jx-sub">Research and thinking on focus, deep work, and building a clearer workflow.</p>
+    </div>
+    <div class="jx-blog-grid reveal">
+      <a class="jx-blog-card" href="blog/multitasking-myth.html">
+        <span class="jx-blog-tag">Focus · 5 min read</span>
+        <h3>The Multitasking Myth: Why Your Brain Can Only Do One Thing Well</h3>
+        <p>97.5% of people lose measurable performance when switching between tasks. Here's what the science says — and how a unified workspace changes the equation.</p>
+        <span class="jx-blog-more">Read more →</span>
+      </a>
+      <a class="jx-blog-card" href="blog/context-switching.html">
+        <span class="jx-blog-tag">Productivity · 4 min read</span>
+        <h3>Context Switching is Costing You 2 Hours Every Day</h3>
+        <p>Every time you switch tools, tabs, or tasks, your brain pays a penalty. Research puts that cost at over 2 hours of lost work daily. Here's how to stop.</p>
+        <span class="jx-blog-more">Read more →</span>
+      </a>
+      <a class="jx-blog-card" href="blog/clear-your-mind.html">
+        <span class="jx-blog-tag">Deep Work · 4 min read</span>
+        <h3>Write It Down, Clear Your Mind: The Zeigarnik Effect and Your To-Do List</h3>
+        <p>Unfinished tasks stay stuck in your working memory until you capture them. This is why a simple task list is one of the most powerful focus tools available.</p>
+        <span class="jx-blog-more">Read more →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ SEND TO DESKTOP (§6.2 — mobile → desktop email bridge) ════════════════ -->
+<section class="jx-section jx-std" id="send-to-desktop">
+  <div class="jx-wrap">
+    <div class="jx-std-card reveal">
+      <div class="jx-std-copy">
+        <p class="jx-eyebrow">On your phone?</p>
+        <h2 class="jx-h2">Send Juttr to your desktop.</h2>
+        <p class="jx-sub">Juttr lives in your desktop browser. Drop your email and we'll send the install link so it's waiting when you sit down.</p>
+      </div>
+      <form class="jx-std-form" id="stdForm" novalidate>
+        <div class="jx-std-row">
+          <input type="email" id="stdEmail" name="email" autocomplete="email" placeholder="you@example.com" required aria-label="Email address" />
+          <button type="submit" class="jx-btn jx-btn-accent" id="stdSubmit">Send me the link</button>
+        </div>
+        <!-- Honeypot -->
+        <div class="lead-hp" aria-hidden="true">
+          <label>Company<input type="text" id="stdCompany" tabindex="-1" autocomplete="off" /></label>
+        </div>
+        <p class="jx-std-note">One email. The link. Nothing else.</p>
+        <p class="jx-std-msg" id="stdMsg" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════════ FINAL CTA (K) ════════════════ -->
+<section class="jx-cta">
+  <div class="reveal">
+    <h2>Never lose interest. Never lose focus.</h2>
+    <p>Add Juttr to Chrome in 30 seconds. No account needed — there's nothing to sign up for.</p>
+    <div class="jx-hero-actions">
+      <a class="jx-btn jx-btn-accent jx-btn-lg" data-store-link="cta" target="_blank" rel="noopener">Get Juttr for Chrome</a>
+      <a class="jx-btn jx-btn-outline jx-btn-lg" href="#pricing">Go Pro — $20/yr</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ FOOTER (L) ════════════════ -->
+<footer class="jx-footer">
+  <div class="jx-footer-grid">
+    <div class="jx-footer-brand">
+      <span class="jx-logo"><img src="assets/logo.png" alt="Juttr logo" /> Juttr</span>
+      <p>Never lose interest. Never lose focus.<br />Zero cloud. No tracking.</p>
+    </div>
+    <div class="jx-footer-col">
+      <h4>Product</h4>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#blog">Blog</a>
+      <a data-store-link="footer" target="_blank" rel="noopener">Chrome Web Store</a>
+      <a href="#features">Edge Add-ons</a>
+    </div>
+    <div class="jx-footer-col">
+      <h4>Company</h4>
+      <a href="#privacy">Privacy Policy</a>
+      <a href="#terms">Terms</a>
+      <p style="margin-top:14px;">Questions or support?</p>
+      <a href="mailto:support@juttr.cc">support@juttr.cc</a>
+      <span class="jx-social">
+        <a href="https://www.instagram.com/juttr_ext/" target="_blank" rel="noopener" aria-label="Juttr on Instagram">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://www.threads.net/@juttr_ext" target="_blank" rel="noopener" aria-label="Juttr on Threads">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.2 22c-2.9 0-5.1-.97-6.6-2.88C4.27 17.4 3.6 15 3.6 12.01c0-3 .67-5.4 2-7.12C7.1 2.97 9.32 2 12.2 2c2.36 0 4.3.68 5.77 2.03 1.3 1.2 2.16 2.87 2.57 4.98l-2.08.5c-.62-3.2-2.72-5.36-6.26-5.36-2.22 0-3.88.72-4.94 2.08-1.02 1.31-1.53 3.25-1.53 5.78 0 2.52.51 4.45 1.53 5.77 1.06 1.37 2.72 2.08 4.94 2.08 2 0 3.42-.53 4.5-1.6.83-.83 1.25-1.8 1.25-2.73 0-.62-.18-1.16-.52-1.6a4.8 4.8 0 0 0-.4 1.03c-.55 1.86-2.03 3.05-4.1 3.05-1.17 0-2.2-.35-2.94-1-.78-.68-1.2-1.63-1.2-2.68 0-2.1 1.72-3.68 4.32-3.68.62 0 1.22.06 1.78.18-.13-1.52-.9-2.34-2.34-2.34-1.03 0-1.9.4-2.35 1.24l-1.85-.94c.82-1.5 2.35-2.36 4.2-2.36 1.42 0 2.55.44 3.36 1.3.8.86 1.22 2.08 1.26 3.63.9.42 1.62 1 2.1 1.72.5.75.76 1.65.76 2.63 0 1.5-.65 3-1.87 4.2C16.9 21.3 14.9 22 12.2 22zm-.27-8.5c-1.35 0-2.24.63-2.24 1.6 0 .95.8 1.6 2.06 1.6 1.24 0 2.1-.72 2.4-2.1.05-.24.1-.5.12-.76a6.5 6.5 0 0 0-2.34-.34z"/></svg>
+        </a>
+        <a href="https://x.com/Juttr_Ext" target="_blank" rel="noopener" aria-label="Juttr on X">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </span>
+    </div>
+  </div>
+  <div class="jx-footer-bottom">
+    © 2026 Juttr. All rights reserved. Built for developers who value their focus.
+  </div>
+</footer>
+
+<!-- ════════════════ LEAD-CAPTURE MODAL ════════════════ -->
+<div class="lead-modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="leadTitle" aria-hidden="true">
+  <div class="lead-backdrop" data-lead-close></div>
+  <div class="lead-card">
+    <button class="lead-close" type="button" aria-label="Close" data-lead-close>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lead-logo"><span class="lead-mark"></span> Juttr</div>
+    <h3 class="lead-title" id="leadTitle">Get Juttr free</h3>
+    <p class="lead-sub">Add your name and email and we'll take you straight to the Chrome Web Store. We'll only use it to share Juttr news — no spam, unsubscribe anytime.</p>
+
+    <form class="lead-form" id="leadForm" novalidate>
+      <label class="lead-field">
+        <span>Name</span>
+        <input type="text" name="name" id="leadName" autocomplete="name" placeholder="Your name" required />
+      </label>
+      <label class="lead-field">
+        <span>Email</span>
+        <input type="email" name="email" id="leadEmail" autocomplete="email" placeholder="you@example.com" required />
+      </label>
+
+      <!-- Honeypot: hidden from humans, catches bots -->
+      <div class="lead-hp" aria-hidden="true">
+        <label>Company<input type="text" name="company" id="leadCompany" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <label class="lead-check">
+        <input type="checkbox" id="leadOptin" checked />
+        <span>Email me occasional Juttr product updates.</span>
+      </label>
+
+      <p class="lead-error" id="leadError" role="alert"></p>
+
+      <button type="submit" class="jx-btn jx-btn-accent jx-btn-lg lead-submit" id="leadSubmit">
+        Continue to Chrome Web Store
+      </button>
+      <p class="lead-skip" id="leadSkip" hidden></p>
+    </form>
+  </div>
+</div>
+
+<script src="js/site.js"></script>
+<script src="js/widgets.js"></script>
+</body>
+</html>

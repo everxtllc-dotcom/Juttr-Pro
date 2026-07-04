@@ -1,0 +1,243 @@
+/* ════════════════════════════════════════════════════════════
+   Juttr site — auth & account pages (login / account / reset)
+   Glass cards on the shared gradient backdrop from theme.css.
+   ════════════════════════════════════════════════════════════ */
+
+.jx-auth-main {
+  min-height: calc(100vh - 76px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 96px 20px 64px;
+}
+
+.jx-auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 32px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card-bg) 72%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 18px 48px var(--shadow);
+}
+
+.jx-auth-card-wide { max-width: 640px; }
+
+.jx-auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 22px;
+}
+.jx-auth-logo img { width: 28px; height: 28px; }
+
+.jx-auth-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.jx-auth-sub {
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Sign in / Create account tabs */
+.jx-auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius);
+  background: var(--bg-secondary);
+  margin-bottom: 22px;
+}
+.jx-auth-tab {
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+}
+.jx-auth-tab[aria-selected="true"] {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* Google button */
+.jx-btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+}
+.jx-btn-google:hover { border-color: var(--accent-border); background: var(--accent-soft); }
+.jx-btn-google svg { width: 18px; height: 18px; flex: none; }
+
+.jx-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 20px 0;
+}
+.jx-auth-divider::before,
+.jx-auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Fields */
+.jx-auth-field { margin-bottom: 14px; }
+.jx-auth-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+.jx-auth-field input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.18s ease;
+}
+.jx-auth-field input:focus { border-color: var(--accent); }
+
+.jx-auth-submit {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.1s ease;
+}
+.jx-auth-submit:hover { background: var(--accent-hover); }
+.jx-auth-submit:active { transform: scale(0.98); }
+.jx-auth-submit[disabled] { opacity: 0.6; cursor: wait; }
+
+.jx-auth-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+.jx-auth-links a, .jx-auth-links button {
+  color: var(--accent);
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.jx-auth-links a:hover, .jx-auth-links button:hover { text-decoration: underline; }
+
+.jx-auth-msg {
+  margin-top: 14px;
+  font-size: 13.5px;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+.jx-auth-msg.err { color: #dc2626; background: rgba(220, 38, 38, 0.08); }
+.jx-auth-msg.ok { color: var(--accent); background: var(--accent-soft); }
+[data-theme="dark"] .jx-auth-msg.err { color: #f87171; background: rgba(248, 113, 113, 0.10); }
+
+/* ── Account page ── */
+.jx-acct-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.jx-acct-row:last-child { border-bottom: 0; }
+.jx-acct-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 2px; }
+.jx-acct-value { font-size: 15px; font-weight: 600; word-break: break-all; }
+
+.jx-plan-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.jx-plan-badge.pro { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border); }
+.jx-plan-badge.free { background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+.jx-device-list { list-style: none; margin-top: 4px; }
+.jx-device-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 14px;
+}
+.jx-device-meta { color: var(--text-secondary); font-size: 12.5px; }
+.jx-device-remove {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.jx-device-remove:hover { color: #dc2626; border-color: rgba(220, 38, 38, 0.4); }
+
+@media (max-width: 480px) {
+  .jx-auth-card { padding: 28px 20px; }
+  .jx-acct-row { flex-direction: column; align-items: flex-start; }
+}

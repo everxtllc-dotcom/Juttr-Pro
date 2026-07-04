@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /partner.html
+Disallow: /login.html
+Disallow: /account.html
+Disallow: /reset.html
+
+Sitemap: https://www.juttr.cc/sitemap.xml

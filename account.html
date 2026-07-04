@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account — Juttr</title>
+  <meta name="description" content="Manage your Juttr plan, billing, and devices." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <meta name="theme-color" content="#0d1117" />
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('juttr-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+
+  <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/site.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+
+<nav class="jx-nav">
+  <a href="index.html" class="jx-logo"><img src="assets/logo.png" alt="Juttr logo" /> Juttr</a>
+</nav>
+
+<main class="jx-auth-main">
+  <div class="jx-auth-card jx-auth-card-wide">
+    <h1 class="jx-auth-title">Your account</h1>
+    <p class="jx-auth-sub" id="acct-sub">Manage your plan, billing, and devices.</p>
+
+    <p class="jx-auth-msg ok" id="checkout-success" hidden>
+      You're Pro! Open the Juttr extension and sign in with the same account — your limits lift automatically.
+    </p>
+    <p class="jx-auth-msg err" id="checkout-failed" hidden>
+      Checkout could not be started. Please try again from the button below.
+    </p>
+
+    <div class="jx-acct-row">
+      <div>
+        <p class="jx-acct-label">Signed in as</p>
+        <p class="jx-acct-value" id="acct-email">Loading…</p>
+      </div>
+      <button class="jx-device-remove" id="signout-btn" type="button">Sign out</button>
+    </div>
+
+    <div class="jx-acct-row">
+      <div>
+        <p class="jx-acct-label">Plan</p>
+        <p class="jx-acct-value"><span class="jx-plan-badge free" id="plan-badge">…</span></p>
+      </div>
+      <div>
+        <button class="jx-auth-submit" id="plan-action" type="button" hidden></button>
+      </div>
+    </div>
+
+    <div class="jx-acct-row">
+      <div style="flex:1">
+        <p class="jx-acct-label">Devices <span class="jx-device-meta">(Pro works on up to 2 browsers at once)</span></p>
+        <ul class="jx-device-list" id="device-list"><li class="jx-device-meta">Loading…</li></ul>
+      </div>
+    </div>
+
+    <p class="jx-auth-msg" id="acct-msg" role="alert" hidden></p>
+  </div>
+</main>
+
+<script src="js/supabase-config.js"></script>
+<script type="module">
+  import { supabase, isConfigured, requireSession, authedFetch } from './js/auth.js';
+
+  const params = new URLSearchParams(location.search);
+  const msg = document.getElementById('acct-msg');
+  function showMsg(text, kind) {
+    msg.textContent = text;
+    msg.className = `jx-auth-msg ${kind}`;
+    msg.hidden = false;
+  }
+
+  if (!isConfigured) {
+    showMsg('Accounts are not configured yet. Please check back soon.', 'err');
+  } else {
+    init();
+  }
+
+  async function init() {
+    const session = await requireSession();
+    if (!session) return;
+
+    document.getElementById('acct-email').textContent = session.user.email;
+    if (params.get('checkout') === 'success') {
+      document.getElementById('checkout-success').hidden = false;
+    } else if (params.get('checkout') === 'failed') {
+      document.getElementById('checkout-failed').hidden = false;
+    }
+
+    document.getElementById('signout-btn').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      location.href = 'login.html';
+    });
+
+    // Plan (own profiles row via RLS). The webhook may lag checkout by a few
+    // seconds, so refetch briefly when arriving from a successful checkout.
+    let profile = await fetchProfile();
+    if (params.get('checkout') === 'success' && profile && !profile.is_pro) {
+      for (let i = 0; i < 5 && profile && !profile.is_pro; i++) {
+        await new Promise((r) => setTimeout(r, 2500));
+        profile = await fetchProfile();
+      }
+    }
+    renderPlan(profile);
+    renderDevices();
+  }
+
+  async function fetchProfile() {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('is_pro, pro_source, stripe_customer_id')
+      .single();
+    if (error) return null;
+    return data;
+  }
+
+  function renderPlan(profile) {
+    const badge = document.getElementById('plan-badge');
+    const action = document.getElementById('plan-action');
+    const isPro = !!profile?.is_pro;
+
+    badge.textContent = isPro ? 'Pro' : 'Free';
+    badge.className = `jx-plan-badge ${isPro ? 'pro' : 'free'}`;
+    action.hidden = false;
+
+    if (isPro && profile?.stripe_customer_id) {
+      action.textContent = 'Manage subscription';
+      action.onclick = async () => {
+        action.disabled = true;
+        const { ok, data } = await authedFetch('/api/portal', {});
+        action.disabled = false;
+        if (ok && data.url) location.href = data.url;
+        else showMsg('Could not open the billing portal. Please try again.', 'err');
+      };
+    } else if (isPro) {
+      // Manual/influencer grant — nothing to manage in Stripe.
+      action.hidden = true;
+    } else {
+      action.textContent = 'Upgrade to Pro';
+      action.onclick = async () => {
+        action.disabled = true;
+        const { ok, data } = await authedFetch('/api/create-checkout', { plan: 'annual' });
+        action.disabled = false;
+        if (ok && data.url) location.href = data.url;
+        else showMsg('Could not start checkout. Please try again.', 'err');
+      };
+    }
+  }
+
+  async function renderDevices() {
+    const list = document.getElementById('device-list');
+    const { data, error } = await supabase
+      .from('devices')
+      .select('id, device_id, label, last_seen_at')
+      .order('last_seen_at', { ascending: false });
+
+    if (error) {
+      list.innerHTML = '<li class="jx-device-meta">Could not load devices.</li>';
+      return;
+    }
+    if (!data || data.length === 0) {
+      list.innerHTML = '<li class="jx-device-meta">No devices yet — sign in from the Juttr extension.</li>';
+      return;
+    }
+
+    list.innerHTML = '';
+    for (const d of data) {
+      const li = document.createElement('li');
+      const left = document.createElement('div');
+      const name = document.createElement('div');
+      name.textContent = d.label || 'Unknown device';
+      const meta = document.createElement('div');
+      meta.className = 'jx-device-meta';
+      meta.textContent = `Last active ${new Date(d.last_seen_at).toLocaleDateString()}`;
+      left.append(name, meta);
+
+      const btn = document.createElement('button');
+      btn.className = 'jx-device-remove';
+      btn.type = 'button';
+      btn.textContent = 'Sign out device';
+      btn.onclick = async () => {
+        btn.disabled = true;
+        const { error: delErr } = await supabase.from('devices').delete().eq('id', d.id);
+        if (delErr) {
+          btn.disabled = false;
+          showMsg('Could not remove the device. Please try again.', 'err');
+          return;
+        }
+        renderDevices();
+      };
+
+      li.append(left, btn);
+      list.appendChild(li);
+    }
+  }
+</script>
+
+</body>
+</html>

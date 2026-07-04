@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Juttr Pro</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0f1117" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="nav scrolled" id="nav">
+  <a href="/" class="nav-logo">
+    <img src="assets/logo.png" alt="" />
+    <span>Juttr</span>
+  </a>
+  <a class="btn btn-ghost btn-sm" href="/">Back to site</a>
+</header>
+
+<section class="hero" style="min-height: 100vh; justify-content: center; padding-top: 120px;">
+  <div class="hero-glow"></div>
+  <div class="hero-inner" style="max-width: 600px;">
+    <div class="privacy-badge" style="margin: 0 auto 24px;">
+      <svg viewBox="0 0 24 24" width="28" height="28"><path d="M5 13l4 4L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h1 class="hero-title" style="font-size: clamp(30px, 5vw, 46px);">You're Pro now. 🎉</h1>
+    <p class="hero-sub" style="margin-bottom: 28px;">
+      Thanks for upgrading. Open the Juttr extension and go to
+      <strong>Settings → Subscription → Continue with Google</strong> — sign in
+      with the same account you used here and Pro activates automatically.
+    </p>
+
+    <div class="license-box" id="licenseBox">
+      <p class="license-label">Legacy license key (only needed for older versions)</p>
+      <div class="license-row">
+        <code id="licenseKey">Loading…</code>
+        <button class="btn btn-accent btn-sm" id="copyKey" type="button" hidden>Copy</button>
+      </div>
+      <p class="license-hint" id="licenseHint">
+        Also in your Stripe receipt email, or anytime at
+        <a href="https://billing.stripe.com/p/login" target="_blank" rel="noopener">your billing portal</a>.
+      </p>
+    </div>
+
+    <div class="hero-actions center" style="margin-top: 32px;">
+      <a class="btn btn-ghost btn-lg" href="/">Back to Juttr</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .license-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 24px; text-align: left;
+    max-width: 520px; margin: 0 auto;
+  }
+  .license-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 12px; }
+  .license-row { display: flex; align-items: center; gap: 12px; }
+  .license-row code {
+    flex: 1 1 auto; font-family: var(--mono); font-size: 14px; color: var(--teal-bright);
+    background: var(--teal-soft); padding: 12px 14px; border-radius: var(--radius-sm);
+    word-break: break-all; user-select: all;
+  }
+  .license-hint { font-size: 13px; color: var(--text-dim); margin-top: 14px; }
+  .license-hint a { color: var(--teal); }
+</style>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const sessionId = params.get('session_id');
+    const keyEl = document.getElementById('licenseKey');
+    const copyBtn = document.getElementById('copyKey');
+    const hintEl = document.getElementById('licenseHint');
+
+    function setKey(value) {
+      keyEl.textContent = value;
+      copyBtn.hidden = false;
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(value);
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => (copyBtn.textContent = 'Copy'), 1800);
+        } catch {}
+      });
+    }
+
+    if (!sessionId) {
+      keyEl.textContent = 'sub_…';
+      hintEl.textContent = 'Find it in your Stripe receipt email — it starts with sub_.';
+      return;
+    }
+
+    fetch('/api/session?session_id=' + encodeURIComponent(sessionId))
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && data.subscription_id) setKey(data.subscription_id);
+        else { keyEl.textContent = 'sub_…'; }
+      })
+      .catch(() => { keyEl.textContent = 'sub_…'; });
+  })();
+</script>
+
+</body>
+</html>

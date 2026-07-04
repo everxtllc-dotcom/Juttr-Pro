@@ -1,0 +1,209 @@
+/* ════════════════════════════════════════════════════════════
+   Juttr site — PRESERVED island styles
+   Carved verbatim from the original styles.css for the two
+   "do-not-change" sections: #apps (showcase) and #themes (demo).
+
+   The old dark/teal palette is re-declared on `.juttr-island` so these
+   sections render byte-identical to before, fully isolated from the new
+   light/dark site theme. (CSS custom properties cascade from the nearest
+   ancestor, so var(--bg) here resolves to the island's dark value while the
+   rest of the page uses theme.css.)
+   ════════════════════════════════════════════════════════════ */
+
+.juttr-island {
+  /* Original palette — pinned, theme-independent */
+  --bg: #0a0b0f;
+  --bg-2: #0d0f15;
+  --surface: rgba(255, 255, 255, 0.024);
+  --surface-2: rgba(255, 255, 255, 0.045);
+  --surface-3: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --text: #f1f3f6;
+  --text-dim: rgba(241, 243, 246, 0.62);
+  --text-faint: rgba(241, 243, 246, 0.4);
+  --teal: #2dd4bf;
+  --teal-bright: #5eead4;
+  --teal-soft: rgba(45, 212, 191, 0.12);
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --maxw: 1140px;
+  --sans: 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Section canvas now follows the SITE theme (white in light / dark in dark).
+     The pinned dark vars above remain ONLY for the always-dark device panels
+     below (browser-frame + theme-demo), whose internals stay dark on purpose. */
+  color: var(--text-primary);
+  font-family: var(--sans);
+  transition: color 0.3s ease;
+}
+
+/* ── Layout / typography primitives used by the islands ── */
+.juttr-island .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+.juttr-island .section { padding: 110px 0; position: relative; }
+.juttr-island .section-head { max-width: 680px; }
+.juttr-island .section-head.center { margin: 0 auto; text-align: center; }
+.juttr-island .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--teal); margin-bottom: 14px; }
+.juttr-island .section-title { font-size: clamp(30px, 4.2vw, 52px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.06; }
+.juttr-island .section-sub { margin-top: 18px; font-size: clamp(15px, 1.4vw, 18px); color: var(--text-dim); line-height: 1.62; max-width: 560px; }
+.juttr-island .section-head.center .section-sub { margin-left: auto; margin-right: auto; }
+
+/* ── Browser frame (shared by showcase) ── */
+.juttr-island .browser-frame {
+  background: linear-gradient(180deg, #14171f, #0e1016);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-strong);
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 40px 90px -30px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.juttr-island .bf-bar { display: flex; align-items: center; gap: 8px; padding: 11px 15px; background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid var(--border); }
+.juttr-island .bf-dot { width: 11px; height: 11px; border-radius: 50%; }
+.juttr-island .bf-r { background: #ff5f57; } .juttr-island .bf-y { background: #febc2e; } .juttr-island .bf-g { background: #28c840; }
+.juttr-island .bf-url { display: inline-flex; align-items: center; gap: 7px; margin-left: 8px; flex: 1; max-width: 320px; background: rgba(255, 255, 255, 0.05); border-radius: 7px; padding: 5px 12px; font-size: 12px; color: var(--text-faint); }
+.juttr-island .bf-shot { position: relative; background: var(--bg); }
+.juttr-island .bf-shot img { width: 100%; height: auto; display: block; }
+
+/* ── Apps showcase ── */
+.juttr-island .apps { background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.012) 50%, transparent); }
+.juttr-island .showcase { margin-top: 64px; }
+.juttr-island .showcase-rail { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 34px; }
+.juttr-island .rail-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--sans); font-size: 13.5px; font-weight: 520;
+  color: var(--text-dim); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 980px;
+  padding: 9px 16px 9px 13px; cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s, transform 0.18s var(--ease);
+}
+.juttr-island .rail-btn svg { width: 16px; height: 16px; opacity: 0.7; transition: opacity 0.2s; }
+.juttr-island .rail-btn:hover { color: var(--text); background: var(--surface-2); transform: translateY(-1px); }
+.juttr-island .rail-btn.active {
+  color: #04201c;
+  background: linear-gradient(180deg, var(--teal-bright), var(--teal));
+  border-color: transparent;
+  box-shadow: 0 8px 22px -8px rgba(45, 212, 191, 0.55);
+}
+.juttr-island .rail-btn.active svg { opacity: 1; }
+.juttr-island .showcase-stage { max-width: 1000px; margin: 0 auto; }
+.juttr-island .showcase-shot { aspect-ratio: 1600 / 1000; }
+.juttr-island .showcase-shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; opacity: 0; transition: opacity 0.5s var(--ease); }
+.juttr-island .showcase-shot img.active { opacity: 1; }
+.juttr-island .showcase-caption { text-align: center; margin-top: 22px; font-size: 15px; color: var(--text-dim); min-height: 24px; }
+.juttr-island .showcase-caption strong { color: var(--text); font-weight: 600; }
+
+/* ── Theme demo ── */
+.juttr-island .theme-demo {
+  margin-top: 60px;
+  background: linear-gradient(180deg, #14171f, #0e1016);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.8);
+}
+.juttr-island .theme-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 26px; padding: 24px 28px; border-bottom: 1px solid var(--border); }
+.juttr-island .ctrl { display: flex; flex-direction: column; gap: 9px; }
+.juttr-island .ctrl.grow { flex: 1; min-width: 150px; }
+.juttr-island .ctrl-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); display: flex; gap: 8px; align-items: center; }
+.juttr-island .ctrl-label em { font-style: normal; font-family: var(--mono); color: var(--teal); letter-spacing: 0; text-transform: none; }
+.juttr-island .seg { display: inline-flex; gap: 4px; background: var(--surface-2); border-radius: 980px; padding: 3px; }
+.juttr-island .seg-btn { font-family: var(--sans); font-size: 12.5px; font-weight: 540; color: var(--text-dim); background: transparent; border: none; border-radius: 980px; padding: 6px 16px; cursor: pointer; transition: color 0.2s, background 0.2s; }
+.juttr-island .seg-btn.active { background: #fff; color: #111; }
+.juttr-island .swatches { display: flex; gap: 9px; }
+.juttr-island .swatch { width: 26px; height: 26px; border-radius: 50%; background: var(--c); border: 2px solid transparent; cursor: pointer; transition: transform 0.18s var(--ease), box-shadow 0.2s; }
+.juttr-island .swatch:hover { transform: scale(1.12); }
+.juttr-island .swatch.active { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--c); }
+.juttr-island input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 3px; background: var(--surface-3); outline: none; cursor: pointer; }
+.juttr-island input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); }
+.juttr-island .upload-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 520; color: var(--text-dim); background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 14px; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.juttr-island .upload-btn:hover { background: var(--surface-3); color: var(--text); }
+
+.juttr-island .theme-preview { position: relative; height: 460px; overflow: hidden; transition: background 0.4s; }
+.juttr-island .tp-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 0.4s; }
+.juttr-island .tp-overlay { position: absolute; inset: 0; transition: background 0.4s; }
+.juttr-island .tp-ui { position: absolute; inset: 0; display: flex; color: var(--tp-text, #f1f3f6); }
+.juttr-island .tp-side {
+  width: 170px; flex: 0 0 auto; display: flex; flex-direction: column; gap: 3px; padding: 16px 12px;
+  background: var(--tp-side-bg, rgba(14, 16, 22, 0.78));
+  backdrop-filter: blur(var(--tp-blur, 14px)); -webkit-backdrop-filter: blur(var(--tp-blur, 14px));
+  border-right: 1px solid var(--tp-border, rgba(255, 255, 255, 0.08));
+  transition: background 0.35s, border-color 0.35s;
+}
+.juttr-island .tp-brand { display: flex; align-items: center; gap: 9px; padding: 4px 8px 14px; }
+.juttr-island .tp-brand-mark { width: 18px; height: 18px; border-radius: 6px; background: var(--tp-accent, #2dd4bf); box-shadow: 0 5px 14px -3px var(--tp-accent-soft, rgba(45, 212, 191, 0.5)); transition: background 0.3s, box-shadow 0.3s; }
+.juttr-island .tp-brand-name { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+.juttr-island .tp-nav { display: flex; flex-direction: column; gap: 2px; }
+.juttr-island .tp-nav-item { display: flex; align-items: center; gap: 11px; padding: 8px 10px; border-radius: 9px; font-size: 13px; font-weight: 500; white-space: nowrap; color: var(--tp-dim, rgba(241, 243, 246, 0.62)); transition: color 0.3s, background 0.3s; }
+.juttr-island .tp-nav-item svg { width: 17px; height: 17px; flex: 0 0 auto; }
+.juttr-island .tp-nav-item.active { color: var(--tp-accent, #2dd4bf); background: var(--tp-accent-soft, rgba(45, 212, 191, 0.14)); font-weight: 600; }
+.juttr-island .tp-nav-foot { margin-top: auto; }
+.juttr-island .tp-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; padding: 18px; }
+.juttr-island .tp-search {
+  display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: var(--radius);
+  background: var(--tp-card-bg, rgba(22, 25, 33, 0.78));
+  backdrop-filter: blur(var(--tp-blur, 14px)); -webkit-backdrop-filter: blur(var(--tp-blur, 14px));
+  border: 1px solid var(--tp-border, rgba(255, 255, 255, 0.08));
+  color: var(--tp-faint, rgba(241, 243, 246, 0.4)); transition: background 0.35s, border-color 0.35s;
+}
+.juttr-island .tp-search svg { width: 16px; height: 16px; flex: 0 0 auto; }
+.juttr-island .tp-search-text { flex: 1; font-size: 13px; }
+.juttr-island .tp-kbd { font-family: var(--mono); font-size: 11px; padding: 2px 7px; border-radius: 6px; border: 1px solid var(--tp-border, rgba(255, 255, 255, 0.14)); }
+.juttr-island .tp-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.juttr-island .tp-card {
+  position: relative; overflow: hidden; display: flex; flex-direction: column; padding: 16px; border-radius: var(--radius-lg);
+  background: var(--tp-card-bg, rgba(22, 25, 33, 0.78));
+  backdrop-filter: blur(var(--tp-blur, 14px)); -webkit-backdrop-filter: blur(var(--tp-blur, 14px));
+  border: 1px solid var(--tp-border, rgba(255, 255, 255, 0.08)); transition: background 0.35s, border-color 0.35s;
+}
+.juttr-island .tp-w-head { display: flex; align-items: center; gap: 8px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--tp-dim, rgba(241, 243, 246, 0.62)); margin-bottom: 14px; }
+.juttr-island .tp-w-head svg { width: 14px; height: 14px; color: var(--tp-accent, #2dd4bf); transition: color 0.3s; }
+.juttr-island .tp-seg { display: flex; gap: 3px; padding: 3px; border-radius: 999px; background: var(--tp-inset, rgba(255, 255, 255, 0.06)); }
+.juttr-island .tp-seg-btn { flex: 1; text-align: center; font-size: 11px; font-weight: 600; padding: 5px 0; border-radius: 999px; color: var(--tp-dim, rgba(241, 243, 246, 0.55)); transition: background 0.3s, color 0.3s; }
+.juttr-island .tp-seg-btn.active { background: var(--tp-accent, #2dd4bf); color: var(--tp-on-accent, #04201c); }
+.juttr-island .tp-timer { display: block; text-align: center; font-family: var(--mono); font-size: 38px; font-weight: 600; letter-spacing: -0.04em; margin: 16px 0 14px; color: var(--tp-text, #f1f3f6); }
+.juttr-island .tp-play { align-self: center; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--tp-accent, #2dd4bf); color: var(--tp-on-accent, #04201c); box-shadow: 0 6px 16px -4px var(--tp-accent-soft, rgba(45, 212, 191, 0.5)); transition: background 0.3s, box-shadow 0.3s; }
+.juttr-island .tp-play svg { width: 16px; height: 16px; margin-left: 2px; }
+.juttr-island .tp-count { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tp-accent, #2dd4bf); margin-bottom: 11px; transition: color 0.3s; }
+.juttr-island .tp-task { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; background: var(--tp-inset, rgba(255, 255, 255, 0.05)); margin-bottom: 8px; }
+.juttr-island .tp-task-dot { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; background: var(--tp-accent, #2dd4bf); transition: background 0.3s; }
+.juttr-island .tp-task-body { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+.juttr-island .tp-task-body b { font-size: 12px; font-weight: 600; color: var(--tp-text, #f1f3f6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.juttr-island .tp-task-body i { font-style: normal; font-size: 10.5px; color: var(--tp-faint, rgba(241, 243, 246, 0.45)); }
+.juttr-island .tp-add { margin-top: auto; font-size: 11.5px; font-weight: 600; color: var(--tp-faint, rgba(241, 243, 246, 0.5)); padding: 9px 10px; border-radius: 10px; border: 1px dashed var(--tp-border, rgba(255, 255, 255, 0.16)); }
+.juttr-island .tp-month { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 12px; color: var(--tp-text, #f1f3f6); }
+.juttr-island .tp-week, .juttr-island .tp-days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+.juttr-island .tp-week span { font-size: 9px; font-weight: 600; color: var(--tp-faint, rgba(241, 243, 246, 0.4)); padding-bottom: 6px; }
+.juttr-island .tp-days span { font-size: 11px; padding: 5px 0; color: var(--tp-dim, rgba(241, 243, 246, 0.65)); }
+.juttr-island .tp-days .today { color: var(--tp-on-accent, #04201c); background: var(--tp-accent, #2dd4bf); border-radius: 7px; font-weight: 700; transition: background 0.3s, color 0.3s; }
+
+@media (max-width: 760px) {
+  .juttr-island .tp-grid { grid-template-columns: 1fr 1fr; }
+  .juttr-island .tp-cal { display: none; }
+}
+@media (max-width: 560px) {
+  .juttr-island .tp-side { width: 54px; padding: 14px 7px; }
+  .juttr-island .tp-brand { justify-content: center; padding: 4px 0 12px; }
+  .juttr-island .tp-brand-name, .juttr-island .tp-nav-item span { display: none; }
+  .juttr-island .tp-nav-item { justify-content: center; padding: 9px 0; }
+  .juttr-island .tp-grid { grid-template-columns: 1fr; }
+  .juttr-island .tp-grid .tp-card:not(:first-child) { display: none; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   THEME-ADAPTIVE SECTION CHROME
+   The section text + showcase tabs (which sit on the page canvas,
+   outside the always-dark device panels) follow the SITE theme so
+   "See it in action" reads correctly in light AND dark mode.
+   Placed last so these win over the pinned-dark rules above.
+   ════════════════════════════════════════════════════════════ */
+.juttr-island .section-title { color: var(--text-primary); }
+.juttr-island .section-sub { color: var(--text-secondary); }
+.juttr-island .showcase-caption { color: var(--text-secondary); }
+.juttr-island .showcase-caption strong { color: var(--text-primary); }
+.juttr-island .rail-btn { color: var(--text-secondary); background: var(--card-bg); border-color: var(--border); }
+.juttr-island .rail-btn:hover { color: var(--text-primary); background: var(--bg-secondary); border-color: var(--accent-border); }
+.juttr-island .rail-btn.active { color: var(--accent-contrast); background: var(--accent); border-color: transparent; box-shadow: 0 8px 22px -8px var(--accent); }
+.juttr-island .rail-btn.active svg { opacity: 1; }
