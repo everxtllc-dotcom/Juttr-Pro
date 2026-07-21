@@ -49,18 +49,16 @@
 .jx-nav.scrolled { border-bottom-color: var(--border); }
 .jx-logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 18px; letter-spacing: -0.02em; color: var(--text-primary); }
 .jx-logo img { width: 26px; height: 26px; border-radius: 7px; }
+/* Brand wordmark — replaces the mark + "Juttr" text lockup (never both together). */
+.jx-logo img.jx-wordmark,
+.lead-logo img.jx-wordmark { width: auto; height: 24px; border-radius: 0; }
 .jx-nav-links { display: flex; align-items: center; gap: 30px; }
 .jx-nav-links a { font-size: 14px; color: var(--text-secondary); transition: color 0.2s; }
 .jx-nav-links a:hover { color: var(--text-primary); }
 .jx-nav-right { display: flex; align-items: center; gap: 12px; }
 
-/* Theme toggle */
-.jx-toggle {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-family: var(--sans); font-size: 13px; font-weight: 540; color: var(--text-secondary);
-  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 980px;
-  padding: 7px 13px; cursor: pointer; transition: color 0.2s, border-color 0.2s, background 0.2s;
-}
+/* Theme toggle — removed: the site is dark-only. */
+.jx-toggle { display: none; }
 .jx-toggle:hover { color: var(--text-primary); border-color: var(--accent-border); }
 .jx-toggle .jx-toggle-icon { width: 15px; height: 15px; display: inline-flex; }
 .jx-toggle .jx-sun { display: none; }

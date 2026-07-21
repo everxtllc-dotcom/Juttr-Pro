@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Juttr — Never Lose Interest. Never Lose Focus. | Private Workspace in Your New Tab</title>
+  <title>Juttr — Stay utterly curious. | Private workspace in your new tab</title>
   <meta name="description" content="Juttr is the private, local-first workspace in your new tab. Capture ideas, links, and tasks without breaking focus — then return when it's time. No account, no cloud, works offline." />
   <meta name="keywords" content="productivity chrome extension, capture ideas browser, tab manager alternative, browser workspace, focus timer, pomodoro chrome extension, task manager extension, distraction free workspace, local first app, deep work tool, all in one workspace chrome, no cloud task manager, save tabs for later" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Juttr — Never Lose Interest. Never Lose Focus." />
+  <meta property="og:title" content="Juttr — Stay utterly curious." />
   <meta property="og:description" content="Capture now. Focus now. Return later. The private workspace in your new tab — no account, no cloud, all local." />
   <meta property="og:image" content="https://www.juttr.cc/assets/screens/og-cover.jpg" />
   <meta property="og:url" content="https://www.juttr.cc" />
@@ -18,7 +18,7 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@Juttr_Ext" />
-  <meta name="twitter:title" content="Juttr — Never Lose Interest. Never Lose Focus." />
+  <meta name="twitter:title" content="Juttr — Stay utterly curious." />
   <meta name="twitter:description" content="Capture ideas without breaking focus. The local-first workspace in your new tab — no account, no cloud." />
   <meta name="twitter:image" content="https://www.juttr.cc/assets/screens/og-cover.jpg" />
 
@@ -51,8 +51,7 @@
     "operatingSystem": "Chrome, Edge, Firefox",
     "offers": [
       { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
-      { "@type": "Offer", "name": "Pro Annual", "price": "24", "priceCurrency": "USD", "billingIncrement": "year" },
-      { "@type": "Offer", "name": "Pro Monthly", "price": "3", "priceCurrency": "USD", "billingIncrement": "month" }
+      { "@type": "Offer", "name": "Pro", "price": "3", "priceCurrency": "USD", "billingIncrement": "month" }
     ],
     "description": "Local-first productivity workspace Chrome extension for developers and designers.",
     "url": "https://www.juttr.cc"
@@ -63,7 +62,7 @@
 
 <!-- ════════════════ NAV (C) ════════════════ -->
 <nav class="jx-nav" id="nav">
-  <a href="#top" class="jx-logo"><img src="assets/logo.png" alt="Juttr logo" /> Juttr</a>
+  <a href="#top" class="jx-logo" aria-label="Juttr"><img class="jx-wordmark" src="assets/juttr-wordmark.svg" alt="Juttr" /></a>
   <div class="jx-nav-links" id="nav-links">
     <a href="#features">Features</a>
     <a href="#see-it">See it in action</a>
@@ -71,7 +70,6 @@
     <a href="#personalize">Personalize</a>
     <a href="#pricing">Pricing</a>
     <a href="#blog">Blog</a>
-    <a href="login.html">Log in</a>
     <a class="jx-btn jx-btn-accent jx-btn-sm jx-nav-cta-m" data-store-link="nav-menu" target="_blank" rel="noopener">Get Juttr for Chrome</a>
   </div>
   <div class="jx-nav-right">
@@ -95,11 +93,10 @@
 <!-- ════════════════ HERO (D) ════════════════ -->
 <header class="jx-hero">
   <div class="jx-hero-inner reveal">
-    <h1>Never Lose Interest.<br /><em>Never Lose Focus.</em></h1>
+    <h1>Stay <em>utterly curious.</em></h1>
     <p class="jx-hero-sub">
-      Juttr is the private workspace in your new tab. Capture ideas, links, and tasks the
-      moment they arrive — without breaking focus — then return when it's time.
-      Tasks, boards, notes, focus timer, and calendar. No cloud. No tracking. No context switching.
+      Jot every spark the moment it strikes. Juttr lives in your new tab, quietly sorting
+      your ideas into boards, notes, and tasks — so nothing gets lost, and nothing piles up.
     </p>
     <div class="jx-hero-actions">
       <a class="jx-btn jx-btn-accent jx-btn-lg" data-store-link="hero" target="_blank" rel="noopener">Get Juttr for Chrome</a>
@@ -449,16 +446,17 @@
         <p class="jx-price-name">Free</p>
         <p class="jx-price-amount"><span class="jx-price-num">$0</span><span class="jx-price-per">/ forever</span></p>
         <ul class="jx-price-list">
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 10 tasks</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 1 note category (10 notes)</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 2 boards (3 sections · 3 columns)</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Focus timer with 2 music channels</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 15 tasks</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 1 note category (15 max)</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 3 boards</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Basic Pomodoro timer</li>
           <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Full calendar access</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Full dashboard, analytics &amp; files</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 2 tool categories</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 2 identities · 4 saved services</li>
-          <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg> Unlimited everything</li>
-          <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg> All themes + custom colors</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Full file manager</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 7 built-in tools</li>
+          <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg> Analytics</li>
+          <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg> Advanced dashboard</li>
+          <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg> All themes</li>
+          <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg> CSV export</li>
         </ul>
         <div class="jx-price-actions">
           <a class="jx-btn jx-btn-ghost jx-btn-lg" data-store-link="pricing-free" target="_blank" rel="noopener">Add to Chrome — Free</a>
@@ -468,29 +466,31 @@
       <!-- Pro -->
       <div class="jx-price-card jx-price-card-pro">
         <span class="jx-price-badge">BEST VALUE</span>
-        <p class="jx-price-name">⭐ Pro — Annual</p>
-        <p class="jx-price-amount"><span class="jx-price-num">$24</span><span class="jx-price-per">/ first year</span></p>
-        <p class="jx-price-note">billed annually · renews at <strong>$49 / year</strong></p>
+        <p class="jx-price-name">⭐ Pro</p>
+        <p class="jx-price-amount"><span class="jx-price-num">$3</span><span class="jx-price-per">/ month</span></p>
+        <p class="jx-price-note">or <strong>$20 / year</strong> (save $16)</p>
         <ul class="jx-price-list">
           <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Everything in Free, plus:</li>
           <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited tasks</li>
           <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited notes &amp; categories</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited boards, sections &amp; columns</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited music links in Focus</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited tool categories</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited identities &amp; services</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited boards</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Custom focus intervals</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Full metrics dashboard</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> All dev &amp; design tools</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Full analytics</li>
           <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> All themes + custom colors</li>
-          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Works on 2 browsers at once</li>
+          <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> CSV data export</li>
           <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Priority email support</li>
         </ul>
         <div class="jx-price-actions">
-          <a class="jx-btn jx-btn-accent jx-btn-lg" href="login.html?intent=upgrade&amp;plan=annual">Get Pro — $24 first year</a>
-          <a class="jx-btn jx-btn-outline" href="login.html?intent=upgrade&amp;plan=monthly">Monthly — $3/mo for 12 months, then $5/mo</a>
+          <button class="jx-btn jx-btn-accent jx-btn-lg" type="button" data-checkout="yearly">Get Pro — $20/year</button>
+          <button class="jx-btn jx-btn-outline" type="button" data-checkout="monthly">Monthly — $3/mo</button>
         </div>
+        <p class="jx-price-err" data-checkout-error role="alert" hidden></p>
       </div>
 
     </div>
-    <p class="jx-price-foot">Payments secured by Stripe · Cancel anytime · Sign in with Google — one account for the extension and web</p>
+    <p class="jx-price-foot">Payments secured by Stripe · Cancel anytime · Early adopters locked in at this price forever</p>
   </div>
 </section>
 
@@ -588,7 +588,7 @@
 <!-- ════════════════ FINAL CTA (K) ════════════════ -->
 <section class="jx-cta">
   <div class="reveal">
-    <h2>Never lose interest. Never lose focus.</h2>
+    <h2>Curiosity without the clutter.</h2>
     <p>Add Juttr to Chrome in 30 seconds. No account needed — there's nothing to sign up for.</p>
     <div class="jx-hero-actions">
       <a class="jx-btn jx-btn-accent jx-btn-lg" data-store-link="cta" target="_blank" rel="noopener">Get Juttr for Chrome</a>
@@ -601,8 +601,8 @@
 <footer class="jx-footer">
   <div class="jx-footer-grid">
     <div class="jx-footer-brand">
-      <span class="jx-logo"><img src="assets/logo.png" alt="Juttr logo" /> Juttr</span>
-      <p>Never lose interest. Never lose focus.<br />Zero cloud. No tracking.</p>
+      <span class="jx-logo"><img class="jx-wordmark" src="assets/juttr-wordmark.svg" alt="Juttr" /></span>
+      <p>Curiosity without the clutter.<br />Zero cloud. No tracking.</p>
     </div>
     <div class="jx-footer-col">
       <h4>Product</h4>
@@ -643,7 +643,7 @@
     <button class="lead-close" type="button" aria-label="Close" data-lead-close>
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     </button>
-    <div class="lead-logo"><span class="lead-mark"></span> Juttr</div>
+    <div class="lead-logo"><img class="jx-wordmark" src="assets/juttr-wordmark.svg" alt="Juttr" /></div>
     <h3 class="lead-title" id="leadTitle">Get Juttr free</h3>
     <p class="lead-sub">Add your name and email and we'll take you straight to the Chrome Web Store. We'll only use it to share Juttr news — no spam, unsubscribe anytime.</p>
 

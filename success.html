@@ -13,9 +13,8 @@
 <body>
 
 <header class="nav scrolled" id="nav">
-  <a href="/" class="nav-logo">
-    <img src="assets/logo.png" alt="" />
-    <span>Juttr</span>
+  <a href="/" class="nav-logo" aria-label="Juttr">
+    <img class="jx-wordmark" src="assets/juttr-wordmark.svg" alt="Juttr" />
   </a>
   <a class="btn btn-ghost btn-sm" href="/">Back to site</a>
 </header>
@@ -28,13 +27,13 @@
     </div>
     <h1 class="hero-title" style="font-size: clamp(30px, 5vw, 46px);">You're Pro now. 🎉</h1>
     <p class="hero-sub" style="margin-bottom: 28px;">
-      Thanks for upgrading. Open the Juttr extension and go to
-      <strong>Settings → Subscription → Continue with Google</strong> — sign in
-      with the same account you used here and Pro activates automatically.
+      Thanks for upgrading. Your <strong>license key is your Stripe Subscription ID</strong>
+      (it starts with <code>sub_</code>). Copy it below, then paste it into Juttr →
+      <strong>Settings → Subscription</strong> to activate Pro.
     </p>
 
     <div class="license-box" id="licenseBox">
-      <p class="license-label">Legacy license key (only needed for older versions)</p>
+      <p class="license-label">Your license key</p>
       <div class="license-row">
         <code id="licenseKey">Loading…</code>
         <button class="btn btn-accent btn-sm" id="copyKey" type="button" hidden>Copy</button>
@@ -46,6 +45,7 @@
     </div>
 
     <div class="hero-actions center" style="margin-top: 32px;">
+      <button class="btn btn-ghost btn-lg" id="manageBilling" type="button">Manage billing</button>
       <a class="btn btn-ghost btn-lg" href="/">Back to Juttr</a>
     </div>
   </div>
@@ -75,6 +75,32 @@
     const keyEl = document.getElementById('licenseKey');
     const copyBtn = document.getElementById('copyKey');
     const hintEl = document.getElementById('licenseHint');
+    const manageBtn = document.getElementById('manageBilling');
+    let customerEmail = null;
+
+    const GENERIC_PORTAL = 'https://billing.stripe.com/p/login';
+
+    // "Manage billing" → open the Stripe Customer Portal. When we know the
+    // customer's email (resolved from the checkout session below) we go straight
+    // in via /api/create-portal; otherwise fall back to the generic email-login
+    // portal. Same-tab redirect avoids popup blockers, and the portal's
+    // return_url brings the user back to the site.
+    manageBtn.addEventListener('click', async () => {
+      if (!customerEmail) { window.location.href = GENERIC_PORTAL; return; }
+      manageBtn.disabled = true;
+      manageBtn.textContent = 'Opening…';
+      try {
+        const r = await fetch('/api/create-portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: customerEmail }),
+        });
+        const data = await r.json().catch(() => ({}));
+        window.location.href = (r.ok && data.url) ? data.url : GENERIC_PORTAL;
+      } catch {
+        window.location.href = GENERIC_PORTAL;
+      }
+    });
 
     function setKey(value) {
       keyEl.textContent = value;
@@ -99,6 +125,7 @@
       .then((data) => {
         if (data && data.subscription_id) setKey(data.subscription_id);
         else { keyEl.textContent = 'sub_…'; }
+        if (data && data.email) customerEmail = data.email;
       })
       .catch(() => { keyEl.textContent = 'sub_…'; });
   })();

@@ -128,6 +128,7 @@ img { max-width: 100%; display: block; }
 .nav.scrolled { background: rgba(10, 11, 15, 0.86); border-bottom-color: var(--border); }
 .nav-logo { display: flex; align-items: center; gap: 10px; }
 .nav-logo img { width: 24px; height: 24px; border-radius: 7px; }
+.nav-logo img.jx-wordmark { width: auto; height: 22px; border-radius: 0; }
 .nav-logo span { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
 .nav-links { display: flex; align-items: center; gap: 30px; }
 .nav-links a { font-size: 14px; color: var(--text-dim); transition: color 0.2s; }

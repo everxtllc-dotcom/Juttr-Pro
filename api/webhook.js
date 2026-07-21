@@ -1,25 +1,16 @@
-// Vercel serverless function — Stripe webhook → Supabase profiles.is_pro.
+// Vercel serverless function — Stripe webhook (safety net).
 //
 // Verifies the Stripe-Signature header by HMAC-SHA256 over `${t}.${rawBody}`
-// with STRIPE_WEBHOOK_SECRET (zero npm deps, Node crypto), then keeps the
-// user's is_pro flag in sync:
+// with STRIPE_WEBHOOK_SECRET (zero npm deps, Node crypto). This is a backstop
+// for instant cancellations; the extension's 7-day revalidation already handles
+// the common case, so we just log here — no database needed.
 //
-//   checkout.session.completed      → is_pro = true (link customer + subscription)
-//   customer.subscription.updated   → is_pro = status in (active, trialing)
-//   customer.subscription.deleted   → is_pro = false
-//
-// Guard: subscription events only ever touch profiles whose pro_source is
-// 'stripe' — a manual/influencer grant (pro_source = 'manual', toggled in the
-// Supabase dashboard) is never clobbered by Stripe.
-//
-// Required env vars:
+// Required env var:
 //   STRIPE_WEBHOOK_SECRET   whsec_…
-//   SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY (see _supabase.js)
 //
 // Needs the raw body, so Vercel's automatic JSON parsing is disabled below.
 
 import crypto from 'crypto';
-import { serviceRest, updateProfile } from './_supabase.js';
 
 export const config = { api: { bodyParser: false } };
 
@@ -51,23 +42,6 @@ function verify(rawBody, header, secret) {
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
-/** Finds the profile row for a subscription event (by sub id, then metadata). */
-async function findProfileForSubscription(sub) {
-  const bySub = await serviceRest(
-    `profiles?stripe_subscription_id=eq.${encodeURIComponent(sub.id)}&select=*`,
-  );
-  if (bySub.ok && bySub.data?.[0]) return bySub.data[0];
-
-  const userId = sub.metadata?.user_id;
-  if (userId) {
-    const byId = await serviceRest(
-      `profiles?id=eq.${encodeURIComponent(userId)}&select=*`,
-    );
-    if (byId.ok && byId.data?.[0]) return byId.data[0];
-  }
-  return null;
-}
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -89,53 +63,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'invalid_payload' });
   }
 
-  try {
-    switch (event.type) {
-      case 'checkout.session.completed': {
-        const session = event.data.object;
-        const userId = session.client_reference_id || session.metadata?.user_id;
-        if (!userId) {
-          console.error('checkout.session.completed without user_id', session.id);
-          break;
-        }
-        await updateProfile(userId, {
-          is_pro: true,
-          pro_source: 'stripe',
-          stripe_customer_id: session.customer || null,
-          stripe_subscription_id: session.subscription || null,
-        });
-        console.log('pro activated', userId, session.subscription);
-        break;
+  switch (event.type) {
+    case 'customer.subscription.deleted':
+      console.log('subscription cancelled', event.data?.object?.id);
+      break;
+    case 'customer.subscription.updated': {
+      const status = event.data?.object?.status;
+      if (status && status !== 'active') {
+        console.log('subscription status changed', event.data?.object?.id, status);
       }
-
-      case 'customer.subscription.updated': {
-        const sub = event.data.object;
-        const profile = await findProfileForSubscription(sub);
-        if (!profile || profile.pro_source !== 'stripe') break;
-        const active = sub.status === 'active' || sub.status === 'trialing';
-        if (profile.is_pro !== active) {
-          await updateProfile(profile.id, { is_pro: active });
-          console.log('subscription status →', sub.id, sub.status, 'is_pro =', active);
-        }
-        break;
-      }
-
-      case 'customer.subscription.deleted': {
-        const sub = event.data.object;
-        const profile = await findProfileForSubscription(sub);
-        if (!profile || profile.pro_source !== 'stripe') break;
-        await updateProfile(profile.id, { is_pro: false });
-        console.log('subscription cancelled', sub.id, '→ downgraded', profile.id);
-        break;
-      }
-
-      default:
-        break;
+      break;
     }
-  } catch (err) {
-    // Return 500 so Stripe retries the delivery.
-    console.error('webhook handler error', event.type, err);
-    return res.status(500).json({ error: 'handler_failed' });
+    default:
+      break;
   }
 
   return res.status(200).json({ received: true });

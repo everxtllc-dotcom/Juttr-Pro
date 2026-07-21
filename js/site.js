@@ -9,22 +9,10 @@ const CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/juttr/ekhlnpa
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ─────────────── Theme toggle ───────────────
-// (data-theme is set pre-paint by the inline <head> snippet to avoid FOUC.)
-(() => {
-  const root = document.documentElement;
-  const toggle = document.getElementById('theme-toggle');
-  if (!root.getAttribute('data-theme')) {
-    root.setAttribute('data-theme', localStorage.getItem('juttr-theme') || 'light');
-  }
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('juttr-theme', next); } catch {}
-    });
-  }
-})();
+// ─────────────── Theme ───────────────
+// Dark is the only theme. Force it in case a stale 'light' value lingers in
+// localStorage or the pre-paint <head> snippet.
+document.documentElement.setAttribute('data-theme', 'dark');
 
 // ─────────────── Nav background on scroll ───────────────
 const nav = document.getElementById('nav');
@@ -289,7 +277,34 @@ if (stdForm) {
   });
 }
 
-// ─────────────── Pricing → Checkout ───────────────
-// Checkout now requires a signed-in account: the pricing CTAs are plain links
-// to login.html?intent=upgrade&plan=…, which continues into Stripe Checkout
-// after authentication (see js/auth.js → continueAfterAuth).
+// ─────────────── Pricing → Stripe Checkout ───────────────
+const checkoutError = document.querySelector('[data-checkout-error]');
+function showCheckoutError(msg) {
+  if (!checkoutError) return;
+  checkoutError.textContent = msg;
+  checkoutError.hidden = false;
+}
+document.querySelectorAll('[data-checkout]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const plan = btn.getAttribute('data-checkout') === 'yearly' ? 'yearly' : 'monthly';
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Loading…';
+    if (checkoutError) checkoutError.hidden = true;
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan }),
+      });
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; return; }
+      showCheckoutError('Could not start checkout. Please try again.');
+    } catch {
+      showCheckoutError('Connection failed. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  });
+});

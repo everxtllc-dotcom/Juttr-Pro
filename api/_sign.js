@@ -24,20 +24,3 @@ export function signLicense(email, tier, issuedAt) {
   });
   return sig.toString('hex');
 }
-
-/**
- * V2 token (Supabase-auth based /api/license): signs
- * `${userId}|${email}|${tier}|${issuedAt}` with the same keypair, so the
- * extension verifies both formats with one public key.
- */
-export function signLicenseV2(userId, email, tier, issuedAt) {
-  const key = process.env.LICENSE_SIGNING_PRIVATE_KEY;
-  if (!key) throw new Error('LICENSE_SIGNING_PRIVATE_KEY not configured');
-
-  const payload = `${userId}|${email}|${tier}|${issuedAt}`;
-  const sig = crypto.sign('sha256', Buffer.from(payload), {
-    key,
-    dsaEncoding: 'ieee-p1363',
-  });
-  return sig.toString('hex');
-}
