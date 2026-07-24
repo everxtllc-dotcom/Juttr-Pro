@@ -3,208 +3,231 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Account — Juttr</title>
-  <meta name="description" content="Manage your Juttr plan, billing, and devices." />
+  <title>Your Juttr account</title>
   <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0f1117" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
-  <meta name="theme-color" content="#0d1117" />
-
-  <script>
-    (function () {
-      try {
-        var t = localStorage.getItem('juttr-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', t);
-      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
-    })();
-  </script>
-
   <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/theme.css" />
-  <link rel="stylesheet" href="css/site.css" />
-  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<nav class="jx-nav">
-  <a href="index.html" class="jx-logo"><img src="assets/logo.png" alt="Juttr logo" /> Juttr</a>
-</nav>
+<header class="nav scrolled" id="nav">
+  <a href="/" class="nav-logo" aria-label="Juttr">
+    <img class="jx-wordmark" src="assets/juttr-wordmark.svg" alt="Juttr" />
+  </a>
+  <a class="btn btn-ghost btn-sm" href="/">Back to site</a>
+</header>
 
-<main class="jx-auth-main">
-  <div class="jx-auth-card jx-auth-card-wide">
-    <h1 class="jx-auth-title">Your account</h1>
-    <p class="jx-auth-sub" id="acct-sub">Manage your plan, billing, and devices.</p>
-
-    <p class="jx-auth-msg ok" id="checkout-success" hidden>
-      You're Pro! Open the Juttr extension and sign in with the same account — your limits lift automatically.
+<section class="hero" style="min-height: 100vh; justify-content: center; padding-top: 120px;">
+  <div class="hero-glow"></div>
+  <div class="hero-inner" style="max-width: 600px;">
+    <h1 class="hero-title" style="font-size: clamp(30px, 5vw, 46px);">Your account</h1>
+    <p class="hero-sub" style="margin-bottom: 28px;">
+      Check your Juttr Pro subscription. Enter the account email and license key
+      (your Stripe Subscription ID, starting with <code>sub_</code>) from your
+      receipt or the <a href="/success">welcome page</a>.
     </p>
-    <p class="jx-auth-msg err" id="checkout-failed" hidden>
-      Checkout could not be started. Please try again from the button below.
-    </p>
 
-    <div class="jx-acct-row">
-      <div>
-        <p class="jx-acct-label">Signed in as</p>
-        <p class="jx-acct-value" id="acct-email">Loading…</p>
+    <!-- Lookup form -->
+    <form class="account-box" id="lookupForm">
+      <div class="field">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com"
+               autocomplete="email" required />
       </div>
-      <button class="jx-device-remove" id="signout-btn" type="button">Sign out</button>
+      <div class="field">
+        <label for="key">License key</label>
+        <input id="key" name="key" type="text" placeholder="sub_..." spellcheck="false"
+               autocapitalize="off" autocorrect="off" required />
+      </div>
+      <button class="btn btn-accent btn-lg" id="lookupBtn" type="submit" style="width: 100%;">
+        View subscription
+      </button>
+      <p class="account-error" id="error" hidden></p>
+    </form>
+
+    <!-- Live details (populated after lookup) -->
+    <div class="account-box" id="details" hidden>
+      <div class="detail-head">
+        <span class="status-badge" id="statusBadge">Active</span>
+      </div>
+      <dl class="detail-list">
+        <div class="detail-row"><dt>Plan</dt><dd id="planVal">—</dd></div>
+        <div class="detail-row"><dt id="renewLabel">Renews</dt><dd id="renewVal">—</dd></div>
+        <div class="detail-row"><dt>Email</dt><dd id="emailVal">—</dd></div>
+      </dl>
+      <div class="hero-actions" style="justify-content: flex-start; margin-top: 22px;">
+        <button class="btn btn-accent btn-lg" id="manageBilling" type="button">Manage / cancel in Stripe</button>
+        <a class="btn btn-ghost btn-lg" href="/">Back to Juttr</a>
+      </div>
+      <p class="account-hint">Opens the secure Stripe portal to update your card, download invoices, or cancel.</p>
     </div>
-
-    <div class="jx-acct-row">
-      <div>
-        <p class="jx-acct-label">Plan</p>
-        <p class="jx-acct-value"><span class="jx-plan-badge free" id="plan-badge">…</span></p>
-      </div>
-      <div>
-        <button class="jx-auth-submit" id="plan-action" type="button" hidden></button>
-      </div>
-    </div>
-
-    <div class="jx-acct-row">
-      <div style="flex:1">
-        <p class="jx-acct-label">Devices <span class="jx-device-meta">(Pro works on up to 2 browsers at once)</span></p>
-        <ul class="jx-device-list" id="device-list"><li class="jx-device-meta">Loading…</li></ul>
-      </div>
-    </div>
-
-    <p class="jx-auth-msg" id="acct-msg" role="alert" hidden></p>
   </div>
-</main>
+</section>
 
-<script src="js/supabase-config.js"></script>
-<script type="module">
-  import { supabase, isConfigured, requireSession, authedFetch } from './js/auth.js';
-
-  const params = new URLSearchParams(location.search);
-  const msg = document.getElementById('acct-msg');
-  function showMsg(text, kind) {
-    msg.textContent = text;
-    msg.className = `jx-auth-msg ${kind}`;
-    msg.hidden = false;
+<style>
+  .account-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 24px; text-align: left;
+    max-width: 520px; margin: 0 auto;
   }
-
-  if (!isConfigured) {
-    showMsg('Accounts are not configured yet. Please check back soon.', 'err');
-  } else {
-    init();
+  .account-box + .account-box { margin-top: 20px; }
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px;
   }
+  .field input {
+    width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14.5px;
+    color: var(--text); background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus { border-color: var(--teal); }
+  #key { font-family: var(--mono); font-size: 13px; }
+  .account-error { margin: 12px 0 0; font-size: 13px; color: #fb7185; }
+  .detail-head { margin-bottom: 18px; }
+  .status-badge {
+    display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--teal-bright); background: var(--teal-soft);
+    border: 1px solid rgba(45, 212, 191, 0.28); border-radius: 999px; padding: 5px 12px;
+  }
+  .detail-list { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .detail-row { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+  .detail-row dt { font-size: 13px; color: var(--text-faint); }
+  .detail-row dd { margin: 0; font-size: 14px; color: var(--text); text-align: right; word-break: break-word; }
+  .account-hint { font-size: 12.5px; color: var(--text-faint); margin: 14px 0 0; }
+</style>
 
-  async function init() {
-    const session = await requireSession();
-    if (!session) return;
+<script>
+  (function () {
+    var STORE_EMAIL = 'juttr_account_email';
+    var STORE_KEY = 'juttr_account_key';
+    var GENERIC_PORTAL = 'https://billing.stripe.com/p/login';
 
-    document.getElementById('acct-email').textContent = session.user.email;
-    if (params.get('checkout') === 'success') {
-      document.getElementById('checkout-success').hidden = false;
-    } else if (params.get('checkout') === 'failed') {
-      document.getElementById('checkout-failed').hidden = false;
+    var form = document.getElementById('lookupForm');
+    var emailEl = document.getElementById('email');
+    var keyEl = document.getElementById('key');
+    var btn = document.getElementById('lookupBtn');
+    var errorEl = document.getElementById('error');
+    var detailsEl = document.getElementById('details');
+    var badgeEl = document.getElementById('statusBadge');
+    var planEl = document.getElementById('planVal');
+    var renewLabelEl = document.getElementById('renewLabel');
+    var renewEl = document.getElementById('renewVal');
+    var emailValEl = document.getElementById('emailVal');
+    var manageBtn = document.getElementById('manageBilling');
+
+    var currentEmail = null;
+
+    // Prefill from a previous visit.
+    try {
+      emailEl.value = localStorage.getItem(STORE_EMAIL) || '';
+      keyEl.value = localStorage.getItem(STORE_KEY) || '';
+    } catch (e) {}
+
+    var ERRORS = {
+      not_found: 'We couldn’t find that license key.',
+      email_mismatch: 'That email doesn’t match this license key.',
+      inactive: 'No active subscription found for this account.',
+      no_customer: 'No account found for that email.',
+      invalid_key: 'That doesn’t look like a valid license key (it starts with sub_).',
+      invalid_email: 'Please enter a valid email address.',
+      not_configured: 'Billing is temporarily unavailable. Try again later.',
+      lookup_failed: 'Something went wrong. Please try again.',
+    };
+
+    function showError(code) {
+      errorEl.textContent = ERRORS[code] || 'Something went wrong. Please try again.';
+      errorEl.hidden = false;
     }
 
-    document.getElementById('signout-btn').addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      location.href = 'login.html';
+    function money(amount, currency) {
+      if (amount == null) return '';
+      try {
+        return new Intl.NumberFormat(undefined, {
+          style: 'currency', currency: (currency || 'usd').toUpperCase(),
+          minimumFractionDigits: amount % 100 === 0 ? 0 : 2,
+        }).format(amount / 100);
+      } catch (e) { return '$' + (amount / 100).toFixed(2); }
+    }
+
+    function formatDate(unix) {
+      if (!unix) return '—';
+      return new Date(unix * 1000).toLocaleDateString(undefined, {
+        year: 'numeric', month: 'long', day: 'numeric',
+      });
+    }
+
+    function render(data) {
+      badgeEl.textContent = data.status === 'trialing' ? 'Trial' : 'Active';
+
+      if (data.plan && data.plan.amount != null) {
+        var per = data.plan.interval ? ' / ' + data.plan.interval : '';
+        planEl.textContent = money(data.plan.amount, data.plan.currency) + per;
+      } else {
+        planEl.textContent = 'Juttr Pro';
+      }
+
+      renewLabelEl.textContent = data.cancel_at_period_end ? 'Cancels' : 'Renews';
+      renewEl.textContent = formatDate(data.current_period_end);
+      emailValEl.textContent = data.email || currentEmail || '—';
+
+      detailsEl.hidden = false;
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      errorEl.hidden = true;
+      detailsEl.hidden = true;
+
+      var email = emailEl.value.trim();
+      var key = keyEl.value.trim();
+      if (!email || !key) return;
+
+      currentEmail = email;
+      try {
+        localStorage.setItem(STORE_EMAIL, email);
+        localStorage.setItem(STORE_KEY, key);
+      } catch (e2) {}
+
+      btn.disabled = true;
+      btn.textContent = 'Checking…';
+      try {
+        var res = await fetch('/api/subscription-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, license_key: key }),
+        });
+        var data = await res.json().catch(function () { return {}; });
+        if (res.ok && data.status) render(data);
+        else showError(data.error);
+      } catch (e3) {
+        showError('lookup_failed');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'View subscription';
+      }
     });
 
-    // Plan (own profiles row via RLS). The webhook may lag checkout by a few
-    // seconds, so refetch briefly when arriving from a successful checkout.
-    let profile = await fetchProfile();
-    if (params.get('checkout') === 'success' && profile && !profile.is_pro) {
-      for (let i = 0; i < 5 && profile && !profile.is_pro; i++) {
-        await new Promise((r) => setTimeout(r, 2500));
-        profile = await fetchProfile();
+    manageBtn.addEventListener('click', async function () {
+      if (!currentEmail) { window.location.href = GENERIC_PORTAL; return; }
+      manageBtn.disabled = true;
+      manageBtn.textContent = 'Opening…';
+      try {
+        var r = await fetch('/api/create-portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentEmail }),
+        });
+        var data = await r.json().catch(function () { return {}; });
+        window.location.href = (r.ok && data.url) ? data.url : GENERIC_PORTAL;
+      } catch (e) {
+        window.location.href = GENERIC_PORTAL;
       }
-    }
-    renderPlan(profile);
-    renderDevices();
-  }
-
-  async function fetchProfile() {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('is_pro, pro_source, stripe_customer_id')
-      .single();
-    if (error) return null;
-    return data;
-  }
-
-  function renderPlan(profile) {
-    const badge = document.getElementById('plan-badge');
-    const action = document.getElementById('plan-action');
-    const isPro = !!profile?.is_pro;
-
-    badge.textContent = isPro ? 'Pro' : 'Free';
-    badge.className = `jx-plan-badge ${isPro ? 'pro' : 'free'}`;
-    action.hidden = false;
-
-    if (isPro && profile?.stripe_customer_id) {
-      action.textContent = 'Manage subscription';
-      action.onclick = async () => {
-        action.disabled = true;
-        const { ok, data } = await authedFetch('/api/portal', {});
-        action.disabled = false;
-        if (ok && data.url) location.href = data.url;
-        else showMsg('Could not open the billing portal. Please try again.', 'err');
-      };
-    } else if (isPro) {
-      // Manual/influencer grant — nothing to manage in Stripe.
-      action.hidden = true;
-    } else {
-      action.textContent = 'Upgrade to Pro';
-      action.onclick = async () => {
-        action.disabled = true;
-        const { ok, data } = await authedFetch('/api/create-checkout', { plan: 'annual' });
-        action.disabled = false;
-        if (ok && data.url) location.href = data.url;
-        else showMsg('Could not start checkout. Please try again.', 'err');
-      };
-    }
-  }
-
-  async function renderDevices() {
-    const list = document.getElementById('device-list');
-    const { data, error } = await supabase
-      .from('devices')
-      .select('id, device_id, label, last_seen_at')
-      .order('last_seen_at', { ascending: false });
-
-    if (error) {
-      list.innerHTML = '<li class="jx-device-meta">Could not load devices.</li>';
-      return;
-    }
-    if (!data || data.length === 0) {
-      list.innerHTML = '<li class="jx-device-meta">No devices yet — sign in from the Juttr extension.</li>';
-      return;
-    }
-
-    list.innerHTML = '';
-    for (const d of data) {
-      const li = document.createElement('li');
-      const left = document.createElement('div');
-      const name = document.createElement('div');
-      name.textContent = d.label || 'Unknown device';
-      const meta = document.createElement('div');
-      meta.className = 'jx-device-meta';
-      meta.textContent = `Last active ${new Date(d.last_seen_at).toLocaleDateString()}`;
-      left.append(name, meta);
-
-      const btn = document.createElement('button');
-      btn.className = 'jx-device-remove';
-      btn.type = 'button';
-      btn.textContent = 'Sign out device';
-      btn.onclick = async () => {
-        btn.disabled = true;
-        const { error: delErr } = await supabase.from('devices').delete().eq('id', d.id);
-        if (delErr) {
-          btn.disabled = false;
-          showMsg('Could not remove the device. Please try again.', 'err');
-          return;
-        }
-        renderDevices();
-      };
-
-      li.append(left, btn);
-      list.appendChild(li);
-    }
-  }
+    });
+  })();
 </script>
 
 </body>

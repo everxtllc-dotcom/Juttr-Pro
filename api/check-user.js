@@ -2,7 +2,9 @@
 // and returns an EC-P256-signed token the extension can verify offline.
 //
 // Zero npm dependencies: talks to the Stripe REST API via global fetch (the site
-// stays a build-free static deploy, matching api/subscribe.js).
+// stays a build-free static deploy, matching api/subscribe.js). The Stripe
+// lookups (and the active/trialing rule) live in api/_stripe.js so activation,
+// revalidation, and api/subscription-status.js all agree.
 //
 // Required env vars (Project → Settings → Environment Variables):
 //   STRIPE_SECRET_KEY             sk_live_… (or sk_test_…)
@@ -16,15 +18,7 @@
 //   Free:  { tier: "free", error }
 
 import { signLicense } from './_sign.js';
-
-const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-
-async function stripeGet(path) {
-  const res = await fetch(`https://api.stripe.com/v1/${path}`, {
-    headers: { authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
-  });
-  return { ok: res.ok, status: res.status, data: await res.json().catch(() => ({})) };
-}
+import { EMAIL_RE, resolveByLicenseKey, resolveByEmail } from './_stripe.js';
 
 function proResponse(res, email) {
   const issued_at = Date.now();
@@ -62,50 +56,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ── Revalidation path (7-day background check, no license key) ──
-    if (revalidate) {
-      const customers = await stripeGet(
-        `customers?email=${encodeURIComponent(email)}&limit=1`,
-      );
-      const customer = customers.data?.data?.[0];
-      if (!customer) return res.status(200).json({ tier: 'free', error: 'No customer found.' });
+    // Revalidation looks the customer up by email (7-day background check, no key);
+    // activation verifies the supplied license key + email match. Both accept
+    // active OR trialing subscriptions (see ACTIVE_STATUSES in _stripe.js).
+    const result = revalidate
+      ? await resolveByEmail(email)
+      : await resolveByLicenseKey({ email, licenseKey });
 
-      const subs = await stripeGet(
-        `subscriptions?customer=${customer.id}&status=active&limit=1`,
-      );
-      if (!subs.data?.data?.length) {
-        return res.status(200).json({ tier: 'free', error: 'No active subscription.' });
-      }
-      return proResponse(res, email);
+    if (!result.ok) {
+      return res.status(200).json({ tier: 'free', error: result.message });
     }
-
-    // ── Activation path ──
-    if (!licenseKey.startsWith('sub_')) {
-      return res.status(400).json({ tier: 'free', error: 'Invalid license key format.' });
-    }
-
-    // 1. Look up the subscription.
-    const sub = await stripeGet(`subscriptions/${encodeURIComponent(licenseKey)}`);
-    if (!sub.ok || !sub.data?.id) {
-      return res.status(200).json({ tier: 'free', error: 'License key not found.' });
-    }
-
-    // 2. Must be active.
-    if (sub.data.status !== 'active') {
-      return res.status(200).json({ tier: 'free', error: 'Subscription is not active.' });
-    }
-
-    // 3. Email must match the subscription's customer.
-    const customerId = typeof sub.data.customer === 'string'
-      ? sub.data.customer
-      : sub.data.customer?.id;
-    const customer = await stripeGet(`customers/${customerId}`);
-    const customerEmail = (customer.data?.email || '').toLowerCase();
-    if (!customerEmail || customerEmail !== email) {
-      return res.status(200).json({ tier: 'free', error: 'Email does not match this license key.' });
-    }
-
-    // 4. All checks passed — sign and return.
     return proResponse(res, email);
   } catch (err) {
     console.error('check-user error:', err);
