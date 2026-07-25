@@ -4,8 +4,14 @@
 //
 // Required env vars:
 //   STRIPE_SECRET_KEY        sk_live_… / sk_test_…
-//   STRIPE_PRICE_MONTHLY     price_… for the $3/month recurring price
-//   STRIPE_PRICE_YEARLY      price_… for the $20/year recurring price
+//   STRIPE_PRICE_MONTHLY     price_… for the $5/month REGULAR recurring price
+//   STRIPE_PRICE_YEARLY      price_… for the $49/year REGULAR recurring price
+// Optional (intro pricing — applied automatically):
+//   STRIPE_COUPON_MONTHLY    40% off, repeating 12 months  → $3/mo year 1, then $5
+//   STRIPE_COUPON_YEARLY     $25.00 off, duration once     → $24 year 1, then $49
+//
+// The prices are the REGULAR amounts; the promo is a coupon so Stripe reverts to
+// full price automatically at renewal (no subscription schedules needed).
 //
 // Request: { plan: "monthly" | "yearly" }
 // Response: { url } — redirect the browser here.
@@ -42,7 +48,19 @@ export default async function handler(req, res) {
   params.append('mode', 'subscription');
   params.append('line_items[0][price]', price);
   params.append('line_items[0][quantity]', '1');
-  params.append('allow_promotion_codes', 'true');
+
+  // Stripe rejects a session that sets BOTH `discounts[]` and
+  // `allow_promotion_codes` — they are mutually exclusive, so send exactly one.
+  // The auto-applied intro coupon wins; if it isn't configured, fall back to
+  // letting the customer type a promo code (the previous behavior).
+  // The coupon id stays server-side — never let the client name a coupon.
+  const coupon = plan === 'yearly'
+    ? process.env.STRIPE_COUPON_YEARLY
+    : process.env.STRIPE_COUPON_MONTHLY;
+
+  if (coupon) params.append('discounts[0][coupon]', coupon);
+  else params.append('allow_promotion_codes', 'true');
+
   params.append('success_url', `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`);
   params.append('cancel_url', `${origin}/#pricing`);
 

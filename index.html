@@ -52,7 +52,8 @@
     "operatingSystem": "Chrome, Edge, Firefox",
     "offers": [
       { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
-      { "@type": "Offer", "name": "Pro", "price": "3", "priceCurrency": "USD", "billingIncrement": "month" }
+      { "@type": "Offer", "name": "Pro (monthly)", "price": "5", "priceCurrency": "USD" },
+      { "@type": "Offer", "name": "Pro (yearly)", "price": "49", "priceCurrency": "USD" }
     ],
     "description": "Local-first productivity workspace Chrome extension for developers and designers.",
     "url": "https://www.juttr.cc"
@@ -468,8 +469,14 @@
       <div class="jx-price-card jx-price-card-pro">
         <span class="jx-price-badge">BEST VALUE</span>
         <p class="jx-price-name">⭐ Pro</p>
-        <p class="jx-price-amount"><span class="jx-price-num">$3</span><span class="jx-price-per">/ month</span></p>
-        <p class="jx-price-note">or <strong>$20 / year</strong> (save $16)</p>
+        <p class="jx-price-amount">
+          <span class="jx-price-was"><span class="jx-sr-only">Regular price </span><s>$5</s></span>
+          <span class="jx-price-num">$3</span><span class="jx-price-per">/ month</span>
+        </p>
+        <p class="jx-price-note">
+          First 12 months, then $5/month. Or
+          <strong><s>$49</s> $24</strong> for your first year, then $49/year.
+        </p>
         <ul class="jx-price-list">
           <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Everything in Free, plus:</li>
           <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Unlimited tasks</li>
@@ -484,14 +491,14 @@
           <li class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Priority email support</li>
         </ul>
         <div class="jx-price-actions">
-          <button class="jx-btn jx-btn-accent jx-btn-lg" type="button" data-checkout="yearly">Get Pro — $20/year</button>
-          <button class="jx-btn jx-btn-outline" type="button" data-checkout="monthly">Monthly — $3/mo</button>
+          <button class="jx-btn jx-btn-accent jx-btn-lg" type="button" data-checkout="yearly">Get Pro — $24 first year</button>
+          <button class="jx-btn jx-btn-outline" type="button" data-checkout="monthly">Monthly — $3/mo first year</button>
         </div>
         <p class="jx-price-err" data-checkout-error role="alert" hidden></p>
       </div>
 
     </div>
-    <p class="jx-price-foot">Payments secured by Stripe · Cancel anytime · Early adopters locked in at this price forever</p>
+    <p class="jx-price-foot">Payments secured by Stripe · Cancel anytime · Intro pricing applied automatically at checkout</p>
   </div>
 </section>
 
@@ -593,7 +600,7 @@
     <p>Add Juttr to Chrome in 30 seconds. No account needed — there's nothing to sign up for.</p>
     <div class="jx-hero-actions">
       <a class="jx-btn jx-btn-accent jx-btn-lg" data-store-link="cta" target="_blank" rel="noopener">Get Juttr for Chrome</a>
-      <a class="jx-btn jx-btn-outline jx-btn-lg" href="#pricing">Go Pro — $20/yr</a>
+      <a class="jx-btn jx-btn-outline jx-btn-lg" href="#pricing">Go Pro — $24 first year</a>
     </div>
   </div>
 </section>

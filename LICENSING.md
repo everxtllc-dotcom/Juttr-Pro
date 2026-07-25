@@ -57,9 +57,12 @@ openssl ec -in license_private.pem -pubout -out license_public.pem
   ```
 
 ### 2. Stripe
-1. Create a product "Juttr Pro" with two recurring prices: **$3/month** and
-   **$20/year**. Copy their `price_…` IDs into `STRIPE_PRICE_MONTHLY` /
-   `STRIPE_PRICE_YEARLY`.
+1. Create a product "Juttr Pro" with two recurring prices at the **regular**
+   amounts: **$5/month** and **$49/year**. Copy their `price_…` IDs into
+   `STRIPE_PRICE_MONTHLY` / `STRIPE_PRICE_YEARLY`. Then create the two intro
+   coupons (40% off ×12 months, and $25 off once) and set `STRIPE_COUPON_MONTHLY`
+   / `STRIPE_COUPON_YEARLY` — see `STRIPE_SETUP_GUIDE.md` Step 2. Do not create
+   the prices at the discounted amounts; the coupon applies on top.
 2. Set `STRIPE_SECRET_KEY`.
 3. (Optional) Add a webhook endpoint pointing at `/api/webhook` for
    `customer.subscription.deleted` and `customer.subscription.updated`; copy its
