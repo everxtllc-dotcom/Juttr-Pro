@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Juttr account</title>
+  <title>Log in — Juttr</title>
   <meta name="robots" content="noindex" />
   <meta name="theme-color" content="#0f1117" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
@@ -21,47 +21,55 @@
 
 <section class="hero" style="min-height: 100vh; justify-content: center; padding-top: 120px;">
   <div class="hero-glow"></div>
-  <div class="hero-inner" style="max-width: 600px;">
-    <h1 class="hero-title" style="font-size: clamp(30px, 5vw, 46px);">Your account</h1>
+  <div class="hero-inner" style="max-width: 560px;">
+    <h1 class="hero-title" style="font-size: clamp(30px, 5vw, 46px);">Log in</h1>
     <p class="hero-sub" style="margin-bottom: 28px;">
-      Check your Juttr Pro subscription. Enter the account email and license key
-      (your Stripe Subscription ID, starting with <code>sub_</code>) from your
-      receipt or the <a href="/success">welcome page</a>.
+      Sign in with your Juttr account email and password to check your subscription.
     </p>
 
-    <!-- Lookup form -->
-    <form class="account-box" id="lookupForm">
+    <!-- Email + password login (Supabase Auth) -->
+    <form class="account-box" id="loginForm">
       <div class="field">
         <label for="email">Email address</label>
         <input id="email" name="email" type="email" placeholder="you@example.com"
                autocomplete="email" required />
       </div>
       <div class="field">
-        <label for="key">License key</label>
-        <input id="key" name="key" type="text" placeholder="sub_..." spellcheck="false"
-               autocapitalize="off" autocorrect="off" required />
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="••••••••"
+               autocomplete="current-password" required />
       </div>
-      <button class="btn btn-accent btn-lg" id="lookupBtn" type="submit" style="width: 100%;">
-        View subscription
+      <button class="btn btn-accent btn-lg" id="loginBtn" type="submit" style="width: 100%;">
+        Log in
       </button>
       <p class="account-error" id="error" hidden></p>
     </form>
 
-    <!-- Live details (populated after lookup) -->
-    <div class="account-box" id="details" hidden>
-      <div class="detail-head">
-        <span class="status-badge" id="statusBadge">Active</span>
+    <p class="hero-sub" style="font-size: 13.5px; margin-top: 18px;">
+      No account yet? <a href="/#pricing">Get Juttr Pro</a> — your account is created at checkout.
+    </p>
+    <p class="hero-sub" style="font-size: 13px; margin-top: 10px;">
+      <a href="#" id="resetLink">Set or reset your password</a>
+    </p>
+
+    <!-- Set password (shown when arriving from a "set your password" email link) -->
+    <form class="account-box" id="setPwForm" hidden>
+      <div class="field">
+        <label for="newPassword">Choose a password</label>
+        <input id="newPassword" type="password" placeholder="At least 8 characters"
+               autocomplete="new-password" minlength="8" required />
       </div>
-      <dl class="detail-list">
-        <div class="detail-row"><dt>Plan</dt><dd id="planVal">—</dd></div>
-        <div class="detail-row"><dt id="renewLabel">Renews</dt><dd id="renewVal">—</dd></div>
-        <div class="detail-row"><dt>Email</dt><dd id="emailVal">—</dd></div>
-      </dl>
-      <div class="hero-actions" style="justify-content: flex-start; margin-top: 22px;">
-        <button class="btn btn-accent btn-lg" id="manageBilling" type="button">Manage / cancel in Stripe</button>
-        <a class="btn btn-ghost btn-lg" href="/">Back to Juttr</a>
-      </div>
-      <p class="account-hint">Opens the secure Stripe portal to update your card, download invoices, or cancel.</p>
+      <button class="btn btn-accent btn-lg" id="setPwBtn" type="submit" style="width: 100%;">
+        Set password &amp; continue
+      </button>
+      <p class="account-error" id="setPwError" hidden></p>
+    </form>
+
+    <!-- Result (shown after a successful login) -->
+    <div class="account-box" id="result" hidden>
+      <div class="detail-head"><span class="status-badge" id="statusBadge" hidden>Active</span></div>
+      <p class="hero-sub" id="resultMsg" style="margin: 0;"></p>
+      <div class="hero-actions" style="justify-content: flex-start; margin-top: 20px;" id="resultActions"></div>
     </div>
   </div>
 </section>
@@ -70,7 +78,7 @@
   .account-box {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius-lg); padding: 24px; text-align: left;
-    max-width: 520px; margin: 0 auto;
+    max-width: 480px; margin: 0 auto;
   }
   .account-box + .account-box { margin-top: 20px; }
   .field { margin-bottom: 16px; }
@@ -85,149 +93,235 @@
     transition: border-color 0.15s;
   }
   .field input:focus { border-color: var(--teal); }
-  #key { font-family: var(--mono); font-size: 13px; }
   .account-error { margin: 12px 0 0; font-size: 13px; color: #fb7185; }
-  .detail-head { margin-bottom: 18px; }
+  .detail-head:empty { display: none; }
   .status-badge {
     display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
     text-transform: uppercase; color: var(--teal-bright); background: var(--teal-soft);
     border: 1px solid rgba(45, 212, 191, 0.28); border-radius: 999px; padding: 5px 12px;
+    margin-bottom: 14px;
   }
-  .detail-list { margin: 0; display: flex; flex-direction: column; gap: 12px; }
-  .detail-row { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
-  .detail-row dt { font-size: 13px; color: var(--text-faint); }
-  .detail-row dd { margin: 0; font-size: 14px; color: var(--text); text-align: right; word-break: break-word; }
-  .account-hint { font-size: 12.5px; color: var(--text-faint); margin: 14px 0 0; }
 </style>
 
-<script>
-  (function () {
-    var STORE_EMAIL = 'juttr_account_email';
-    var STORE_KEY = 'juttr_account_key';
-    var GENERIC_PORTAL = 'https://billing.stripe.com/p/login';
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    var form = document.getElementById('lookupForm');
-    var emailEl = document.getElementById('email');
-    var keyEl = document.getElementById('key');
-    var btn = document.getElementById('lookupBtn');
-    var errorEl = document.getElementById('error');
-    var detailsEl = document.getElementById('details');
-    var badgeEl = document.getElementById('statusBadge');
-    var planEl = document.getElementById('planVal');
-    var renewLabelEl = document.getElementById('renewLabel');
-    var renewEl = document.getElementById('renewVal');
-    var emailValEl = document.getElementById('emailVal');
-    var manageBtn = document.getElementById('manageBilling');
+  // ── Public Supabase config (safe to expose in the browser) ──────────────────
+  // The anon key is designed to be public; Row Level Security protects your data.
+  // Replace both with your project's values (Dashboard → Project Settings → API).
+  // The SERVICE ROLE key must NEVER appear here — it stays server-side only.
+  const SUPABASE_URL = 'https://ctypqmdlwlssgilusdsf.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0eXBxbWRsd2xzc2dpbHVzZHNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxNzgyOTAsImV4cCI6MjA5ODc1NDI5MH0.rf3HzwknqJTA-Zv_vnsA8dpRxqaXQV1ThXg8edBWe5A';
 
-    var currentEmail = null;
+  // Where verified users are sent. Point this at your app / dashboard URL.
+  const DASHBOARD_URL = '/';
 
-    // Prefill from a previous visit.
+  const GENERIC_PORTAL = 'https://billing.stripe.com/p/login';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const form = document.getElementById('loginForm');
+  const emailEl = document.getElementById('email');
+  const passwordEl = document.getElementById('password');
+  const btn = document.getElementById('loginBtn');
+  const errorEl = document.getElementById('error');
+  const resultEl = document.getElementById('result');
+  const badgeEl = document.getElementById('statusBadge');
+  const resultMsg = document.getElementById('resultMsg');
+  const resultActions = document.getElementById('resultActions');
+  const setPwForm = document.getElementById('setPwForm');
+  const newPasswordEl = document.getElementById('newPassword');
+  const setPwBtn = document.getElementById('setPwBtn');
+  const setPwError = document.getElementById('setPwError');
+  const resetLink = document.getElementById('resetLink');
+
+  // Prefill the email if a Supabase session is already stored on this device.
+  supabase.auth.getSession().then(({ data }) => {
+    if (data && data.session && data.session.user && !emailEl.value) {
+      emailEl.value = data.session.user.email || '';
+    }
+  });
+
+  function showError(msg) { errorEl.textContent = msg; errorEl.hidden = false; }
+  function setBusy(b) { btn.disabled = b; btn.textContent = b ? 'Signing in…' : 'Log in'; }
+
+  async function openPortal(email) {
     try {
-      emailEl.value = localStorage.getItem(STORE_EMAIL) || '';
-      keyEl.value = localStorage.getItem(STORE_KEY) || '';
-    } catch (e) {}
-
-    var ERRORS = {
-      not_found: 'We couldn’t find that license key.',
-      email_mismatch: 'That email doesn’t match this license key.',
-      inactive: 'No active subscription found for this account.',
-      no_customer: 'No account found for that email.',
-      invalid_key: 'That doesn’t look like a valid license key (it starts with sub_).',
-      invalid_email: 'Please enter a valid email address.',
-      not_configured: 'Billing is temporarily unavailable. Try again later.',
-      lookup_failed: 'Something went wrong. Please try again.',
-    };
-
-    function showError(code) {
-      errorEl.textContent = ERRORS[code] || 'Something went wrong. Please try again.';
-      errorEl.hidden = false;
-    }
-
-    function money(amount, currency) {
-      if (amount == null) return '';
-      try {
-        return new Intl.NumberFormat(undefined, {
-          style: 'currency', currency: (currency || 'usd').toUpperCase(),
-          minimumFractionDigits: amount % 100 === 0 ? 0 : 2,
-        }).format(amount / 100);
-      } catch (e) { return '$' + (amount / 100).toFixed(2); }
-    }
-
-    function formatDate(unix) {
-      if (!unix) return '—';
-      return new Date(unix * 1000).toLocaleDateString(undefined, {
-        year: 'numeric', month: 'long', day: 'numeric',
+      const r = await fetch('/api/create-portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email }),
       });
+      const d = await r.json().catch(() => ({}));
+      window.location.href = (r.ok && d.url) ? d.url : GENERIC_PORTAL;
+    } catch (e) {
+      window.location.href = GENERIC_PORTAL;
+    }
+  }
+
+  function fmtDate(unix) {
+    return new Date(unix * 1000).toLocaleDateString(undefined, {
+      year: 'numeric', month: 'long', day: 'numeric',
+    });
+  }
+  function daysLeft(unix) {
+    return Math.max(0, Math.ceil((unix * 1000 - Date.now()) / 86400000));
+  }
+  function continueBtn() {
+    return '<a class="btn btn-accent btn-lg" href="' + DASHBOARD_URL + '">Continue to Juttr</a>';
+  }
+
+  // Active accounts. Lifetime never expires; Stripe plans (active/trialing) show
+  // the interval + how much time is left in the current period, fetched live from
+  // Stripe via /api/subscription-status.
+  async function showActive(status, email) {
+    resultEl.hidden = false;
+    badgeEl.hidden = false;
+    badgeEl.textContent =
+      status === 'trialing' ? 'Trial' :
+      status === 'lifetime' ? 'Lifetime' : 'Active';
+    resultActions.innerHTML = '';
+
+    if (status === 'lifetime') {
+      resultMsg.textContent = 'Lifetime access — your Pro plan never expires.';
+      resultActions.innerHTML = continueBtn();
+      return;
     }
 
-    function render(data) {
-      badgeEl.textContent = data.status === 'trialing' ? 'Trial' : 'Active';
+    resultMsg.textContent = 'Loading your plan details…';
+    let msg = 'Your Juttr Pro subscription is active.';
+    try {
+      const r = await fetch('/api/subscription-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && d.current_period_end) {
+        const interval = d.plan && d.plan.interval;               // 'month' | 'year'
+        const period = interval === 'year' ? 'yearly' : interval === 'month' ? 'monthly' : 'Pro';
+        const left = daysLeft(d.current_period_end);
+        msg = 'Juttr Pro (' + period + ') — ' +
+          (d.cancel_at_period_end ? 'expires' : 'renews') + ' on ' + fmtDate(d.current_period_end) +
+          ' · ' + left + ' day' + (left === 1 ? '' : 's') + ' left.';
+      }
+    } catch (e) { /* keep the generic active message */ }
 
-      if (data.plan && data.plan.amount != null) {
-        var per = data.plan.interval ? ' / ' + data.plan.interval : '';
-        planEl.textContent = money(data.plan.amount, data.plan.currency) + per;
+    resultMsg.textContent = msg;
+    resultActions.innerHTML =
+      continueBtn() +
+      '<button class="btn btn-ghost btn-lg" id="portalBtn2" type="button">Manage billing</button>';
+    const pb = document.getElementById('portalBtn2');
+    if (pb) pb.addEventListener('click', function () { openPortal(email); });
+  }
+
+  // Logged in, but no Pro (the default 'free' plan, or a lapsed subscription).
+  function showInactive(email, status) {
+    resultEl.hidden = false;
+    badgeEl.hidden = true;
+    resultMsg.textContent = (!status || status === 'free' || status === 'none')
+      ? 'You’re logged in on the free plan. Upgrade to unlock Juttr Pro.'
+      : 'You’re logged in, but your subscription isn’t active. Renew to restore Pro.';
+    resultActions.innerHTML =
+      '<a class="btn btn-accent btn-lg" href="/#pricing">Upgrade to Pro</a>' +
+      '<button class="btn btn-ghost btn-lg" id="portalBtn" type="button">Manage billing</button>';
+    document.getElementById('portalBtn').addEventListener('click', function () {
+      openPortal(email);
+    });
+  }
+
+  // Verify subscription status server-side and render the result. Shared by the
+  // login flow and the set-password (auto-provisioned account) flow.
+  async function verifyAndShow(email) {
+    try {
+      const res = await fetch('/api/check-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email }),
+      });
+      const info = await res.json().catch(() => ({}));
+      if (res.ok && info.active) {
+        // Show details (incl. time left) with a manual "Continue" button.
+        showActive(info.subscription_status, email);
       } else {
-        planEl.textContent = 'Juttr Pro';
+        showInactive(email, info.subscription_status);
       }
-
-      renewLabelEl.textContent = data.cancel_at_period_end ? 'Cancels' : 'Renews';
-      renewEl.textContent = formatDate(data.current_period_end);
-      emailValEl.textContent = data.email || currentEmail || '—';
-
-      detailsEl.hidden = false;
+    } catch (err) {
+      showError('Could not verify your subscription. Please try again.');
     }
+  }
 
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    errorEl.hidden = true;
+    resultEl.hidden = true;
+
+    const email = emailEl.value.trim().toLowerCase();
+    const password = passwordEl.value;
+    if (!email || !password) return;
+
+    setBusy(true);
+    const auth = await supabase.auth.signInWithPassword({ email: email, password: password });
+    if (auth.error) {
+      setBusy(false);
+      showError(auth.error.message || 'Incorrect email or password.');
+      return;
+    }
+    setBusy(false);
+    await verifyAndShow(email);
+  });
+
+  // Arriving from a "set your password" email link: Supabase parses the token
+  // from the URL and fires PASSWORD_RECOVERY. Reveal the set-password form.
+  supabase.auth.onAuthStateChange(function (event) {
+    if (event === 'PASSWORD_RECOVERY') {
+      form.hidden = true;
+      resultEl.hidden = true;
       errorEl.hidden = true;
-      detailsEl.hidden = true;
+      setPwForm.hidden = false;
+    }
+  });
 
-      var email = emailEl.value.trim();
-      var key = keyEl.value.trim();
-      if (!email || !key) return;
+  setPwForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    setPwError.hidden = true;
+    const pw = newPasswordEl.value;
+    if (!pw || pw.length < 8) {
+      setPwError.textContent = 'Use at least 8 characters.';
+      setPwError.hidden = false;
+      return;
+    }
+    setPwBtn.disabled = true;
+    setPwBtn.textContent = 'Saving…';
+    const upd = await supabase.auth.updateUser({ password: pw });
+    if (upd.error) {
+      setPwBtn.disabled = false;
+      setPwBtn.textContent = 'Set password & continue';
+      setPwError.textContent = upd.error.message || 'Could not set your password.';
+      setPwError.hidden = false;
+      return;
+    }
+    // Now authenticated — verify the subscription and show the result.
+    const who = await supabase.auth.getUser();
+    const email = ((who.data && who.data.user && who.data.user.email) || '').toLowerCase();
+    setPwForm.hidden = true;
+    await verifyAndShow(email);
+  });
 
-      currentEmail = email;
-      try {
-        localStorage.setItem(STORE_EMAIL, email);
-        localStorage.setItem(STORE_KEY, key);
-      } catch (e2) {}
-
-      btn.disabled = true;
-      btn.textContent = 'Checking…';
-      try {
-        var res = await fetch('/api/subscription-status', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email, license_key: key }),
-        });
-        var data = await res.json().catch(function () { return {}; });
-        if (res.ok && data.status) render(data);
-        else showError(data.error);
-      } catch (e3) {
-        showError('lookup_failed');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'View subscription';
-      }
+  // "Set or reset your password" — email a set-password link to the address typed
+  // above (works for both new/auto-provisioned and existing accounts).
+  resetLink.addEventListener('click', async function (e) {
+    e.preventDefault();
+    const email = emailEl.value.trim().toLowerCase();
+    if (!email) { showError('Enter your email above first, then click the link.'); return; }
+    await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/account',
     });
-
-    manageBtn.addEventListener('click', async function () {
-      if (!currentEmail) { window.location.href = GENERIC_PORTAL; return; }
-      manageBtn.disabled = true;
-      manageBtn.textContent = 'Opening…';
-      try {
-        var r = await fetch('/api/create-portal', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: currentEmail }),
-        });
-        var data = await r.json().catch(function () { return {}; });
-        window.location.href = (r.ok && data.url) ? data.url : GENERIC_PORTAL;
-      } catch (e) {
-        window.location.href = GENERIC_PORTAL;
-      }
-    });
-  })();
+    errorEl.hidden = true;
+    resultEl.hidden = false;
+    badgeEl.hidden = true;
+    resultMsg.textContent = 'Check your email for a link to set your password.';
+    resultActions.innerHTML = '';
+  });
 </script>
 
 </body>
