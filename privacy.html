@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  ART. 27 REPRESENTATIVE — REMOVED ON THE OWNER'S INSTRUCTION (26 Jul 2026).
+  The owner has determined that EverXt, LLC relies on the GDPR Art. 27(2)
+  derogation and will not appoint an EU/UK representative. That is a legal
+  judgment made by the owner, not a verified conclusion. Note for whoever
+  reviews this next: Art. 27(2)(a) is conjunctive — the processing must be
+  "occasional" AND low-risk. The marketing list has since been removed, which
+  strengthens that position considerably, but recurring subscription records
+  remain. Worth a lawyer's eye.
+
+  RETENTION PERIODS (§8) ARE PUBLIC COMMITMENTS. Verify each one against the
+  actual configuration in Supabase, Brevo, Stripe and Vercel — a stated
+  period you do not honour is itself a compliance failure.
+
+  §3 DESCRIBES A MINIMAL-COLLECTION MODEL THAT THE CODE NOW MATCHES:
+    • the lead-capture modal and its name field were deleted from index.html
+    • api/subscribe.js (which wrote { name, email, source, opt_in } to the
+      Supabase `subscribers` table) was deleted outright
+    • api/send-install-link.js replaced it and stores NOTHING
+    • store CTAs are plain links; nothing is collected before the store
+  If anyone re-adds collection — a mailing list, a name field, analytics,
+  campaign attribution — §3 MUST be updated in the same change, or this
+  page becomes a false statement.
+
+  This page carries <meta name="robots" content="noindex, nofollow"> and is
+  excluded from sitemap.xml. Every page of the preview carries the same tag —
+  vercel.json is deliberately left untouched. See the checklist in DEPLOY.md.
+  ══════════════════════════════════════════════════════════════════════
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Privacy Policy | Juttr</title>
+  <meta name="description" content="How Juttr handles your data: your workspace stays on your device, while account, subscription, billing and requested email data are processed by named service providers." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="canonical" href="https://www.juttr.cc/privacy" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+
+  <script>
+    document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+
+  <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+
+<nav class="jx-nav scrolled" id="nav">
+  <a href="/" class="jx-logo" aria-label="Juttr"><img class="jx-wordmark" src="assets/juttr-wordmark.svg" alt="Juttr" /></a>
+  <div class="jx-nav-right">
+    <a class="jx-btn jx-btn-ghost jx-btn-sm" href="/">Back to Juttr</a>
+  </div>
+</nav>
+
+<main>
+  <article class="jx-article jx-legal">
+    <p class="jx-article-meta">Legal</p>
+    <h1>Privacy Policy</h1>
+    <p class="jx-legal-updated">Effective 26 July 2026 · Website, browser extension, accounts, subscriptions and support</p>
+
+    <div class="jx-legal-lede">
+      <p><strong>The short version.</strong> Your workspace stays local — tasks, notes, boards, calendar data and files live on your device and in a local folder you control. The only personal information we hold is the email address for your account, plus a subscription record if you buy Pro. There is no mailing list and no tracking. The sections below explain exactly which is which.</p>
+    </div>
+
+    <ul class="jx-legal-toc">
+      <li><a href="#who-we-are">1. Who we are</a></li>
+      <li><a href="#local-first">2. Local-first workspace data</a></li>
+      <li><a href="#what-we-collect">3. Information we collect</a></li>
+      <li><a href="#how-we-use">4. How we use information</a></li>
+      <li><a href="#legal-bases">5. Legal bases (GDPR)</a></li>
+      <li><a href="#providers">6. Service providers</a></li>
+      <li><a href="#transfers">7. International transfers</a></li>
+      <li><a href="#retention">8. Retention</a></li>
+      <li><a href="#your-rights">9. Your choices and rights</a></li>
+      <li><a href="#cookies">10. Cookies and local storage</a></li>
+      <li><a href="#security">11. Security</a></li>
+      <li><a href="#children">12. Children</a></li>
+      <li><a href="#changes">13. Changes to this Policy</a></li>
+      <li><a href="#contact">14. Contact us</a></li>
+    </ul>
+
+    <h2 id="who-we-are">1. Who we are</h2>
+    <p>This Privacy Policy explains how Juttr ("Juttr," "we," "us," or "our") collects, uses, stores, and shares personal information when you use the Juttr website, browser extension, account and billing pages, email services, and support.</p>
+    <ul>
+      <li><strong>Data controller / legal entity:</strong> EverXt, LLC, a Wyoming limited liability company, doing business as Juttr</li>
+      <li><strong>Business address:</strong> 30 N Gould St, STE 4000, Sheridan, Wyoming 82801, United States</li>
+      <li><strong>Privacy contact:</strong> <a href="mailto:info@juttr.cc">info@juttr.cc</a></li>
+    </ul>
+
+    <h2 id="local-first">2. Local-first workspace data</h2>
+    <p>Juttr is designed as a local-first product. Your workspace content — including tasks, notes, boards, calendar entries, focus records, settings, and files or file references — is stored on your device and, when you choose this option, in a local folder selected by you. Juttr does not receive that workspace content merely because you create or edit it locally.</p>
+    <p>Some online features necessarily transmit limited information. For example, account login, password recovery, subscription verification, billing, requested emails, and support communications use online services. Those activities are described below.</p>
+    <p>You are responsible for protecting, backing up, and controlling access to the local folder and device where your workspace data is stored.</p>
+
+    <h2 id="what-we-collect">3. Information we collect</h2>
+
+    <p>Juttr deliberately collects as little as possible. <strong>The only personal information we hold about you is the email address for your Juttr account, and the subscription record that goes with it if you buy Pro.</strong> We do not run a mailing list, we do not ask for your name, and we do not track which page or advert brought you here.</p>
+
+    <h3>3.1 Information you provide</h3>
+    <ul>
+      <li><strong>Account information</strong> — your email address, used to create and sign in to your Juttr account. Passwords are handled by our authentication provider and are not visible to Juttr in plain text.</li>
+      <li><strong>Subscription information</strong> — if you buy Pro: your plan, subscription status, renewal date, Stripe customer or subscription identifier, and payment status. This exists so we can verify that your subscription is active.</li>
+      <li><strong>Support information</strong> — anything you choose to put in an email to us.</li>
+    </ul>
+
+    <h3>3.2 Information used but not stored</h3>
+    <ul>
+      <li><strong>Install-link requests.</strong> If you ask us to email the Chrome install link to yourself, your address is passed to our email provider to deliver that one message and is <strong>not saved to our database</strong>. You are not added to any list and will not receive follow-up email.</li>
+    </ul>
+
+    <h3>3.3 Information collected automatically</h3>
+    <ul>
+      <li>Basic server and security logs kept by our hosting provider, which may contain an IP address, browser or device information, request time, requested URL, and error information.</li>
+      <li>Local browser storage used to remember your preferences and keep you signed in. This stays in your browser.</li>
+    </ul>
+
+    <p><strong>What we do not do.</strong> Juttr has no marketing mailing list, no advertising trackers, no analytics tracking of visitors, and no signup-source or campaign attribution. We do not sell or share personal information for advertising. If any of this changes, we will update this Policy — and put any consent controls the law requires in place — <em>before</em> that collection begins.</p>
+
+    <h2 id="how-we-use">4. How we use information</h2>
+    <ul>
+      <li>Create and authenticate your account, and send password-reset messages.</li>
+      <li>Verify that a Pro subscription is active, and process purchases, renewals, cancellations, refunds and receipts.</li>
+      <li>Send an installation link or other message that you specifically asked for.</li>
+      <li>Respond to support requests and communicate important service, security, or policy notices.</li>
+      <li>Keep the service secure, prevent fraud and abuse, enforce our <a href="/terms">Terms</a>, and comply with legal obligations.</li>
+    </ul>
+    <p>We do not use your information for marketing, profiling, advertising, or automated decision-making.</p>
+
+    <h2 id="legal-bases">5. Legal bases where GDPR or similar law applies</h2>
+    <ul>
+      <li><strong>Contract:</strong> processing needed to provide your account, paid subscription, billing, and anything else you specifically request.</li>
+      <li><strong>Legitimate interests:</strong> keeping the service secure and operational, preventing abuse, and responding to support, where those interests are not overridden by your rights.</li>
+      <li><strong>Legal obligation:</strong> tax, accounting, consumer protection, fraud prevention, and lawful authority requests.</li>
+    </ul>
+
+    <h2 id="providers">6. Service providers and disclosures</h2>
+    <p>We use service providers to operate specific parts of Juttr. They may process limited personal information on our behalf or as independent controllers under their own terms.</p>
+    <ul>
+      <li><strong>Vercel</strong> — website hosting, serverless functions, delivery, and operational logs.</li>
+      <li><strong>Supabase</strong> — account authentication and storage of your account record (email and subscription status).</li>
+      <li><strong>Stripe</strong> — checkout, payment processing, subscription management, receipts, fraud prevention, and billing portals. Juttr does not store complete payment-card details.</li>
+      <li><strong>Brevo</strong> — delivery of transactional email only: requested installation links, account and password messages. We do not use it for marketing campaigns.</li>
+      <li><strong>Google / Chrome Web Store</strong> and other browser stores — extension distribution and store account interactions.</li>
+    </ul>
+    <p>We may also disclose information when required by law, to protect rights and safety, in connection with a business reorganization or sale, or with your direction or consent. We do not sell your personal information.</p>
+
+    <h2 id="transfers">7. International data transfers</h2>
+    <p>Our providers may process information in countries other than your own, including the United States. Where required, we use an approved transfer mechanism or other appropriate safeguard.</p>
+
+    <h2 id="retention">8. Retention</h2>
+    <p>We retain personal information only for as long as reasonably necessary for the purposes described in this Policy, including legal, accounting, security, and dispute-resolution needs.</p>
+    <ul>
+      <li><strong>Account and subscription records:</strong> while the account or subscription is active and for a reasonable period afterward.</li>
+      <li><strong>Install-link requests:</strong> not retained by Juttr. Our email provider keeps its own short-term delivery log.</li>
+      <li><strong>Payment and tax records:</strong> for the period required by applicable accounting and tax law.</li>
+      <li><strong>Operational logs:</strong> normally 30 to 90 days unless needed longer for security or legal reasons.</li>
+      <li><strong>Support records:</strong> normally up to 24 months after the issue is closed, unless a longer period is necessary.</li>
+    </ul>
+
+    <h2 id="your-rights">9. Your choices and rights</h2>
+    <ul>
+      <li>Request access to, correction of, deletion of, or a copy of personal information, subject to applicable law.</li>
+      <li>Delete your account, and with it the email address and subscription record we hold — email <a href="mailto:info@juttr.cc">info@juttr.cc</a>.</li>
+      <li>Object to or request restriction of certain processing where applicable.</li>
+      <li>Complain to the relevant data-protection authority where applicable.</li>
+      <li>Delete local workspace data by using Juttr's controls or removing the selected local files, subject to your own backups.</li>
+    </ul>
+    <p>We may need to verify your identity before fulfilling a request. Some information may be retained where required by law or necessary to establish, exercise, or defend legal claims.</p>
+
+    <h2 id="cookies">10. Cookies and local storage</h2>
+    <p>The website and account pages use local storage or similar browser technology to keep sessions, remember preferences, prevent repeated prompts, and support security. Juttr does not use advertising cookies. If that changes, we will provide any notice or consent mechanism required by applicable law.</p>
+
+    <h2 id="security">11. Security</h2>
+    <p>We use reasonable administrative, technical, and organizational measures designed to protect personal information. No method of transmission or storage is completely secure. You should use a strong, unique password and protect access to your device and local folder.</p>
+
+    <h2 id="children">12. Children</h2>
+    <p><strong>Minimum age: 16.</strong> Juttr is not directed to children under 16. If we learn that we have collected personal information from a child without required authorization, we will take reasonable steps to delete it.</p>
+
+    <h2 id="changes">13. Changes to this Policy</h2>
+    <p>We may update this Policy to reflect changes in Juttr, our providers, or applicable law. We will update the effective date and provide additional notice when a material change requires it.</p>
+
+    <h2 id="contact">14. Contact us</h2>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:info@juttr.cc">info@juttr.cc</a></li>
+      <li><strong>Postal address:</strong> EverXt, LLC, 30 N Gould St, STE 4000, Sheridan, Wyoming 82801, United States</li>
+    </ul>
+
+    <p>See also our <a href="/terms">Terms of Service</a>.</p>
+  </article>
+</main>
+
+<footer class="jx-footer">
+  <div class="jx-footer-grid">
+    <div class="jx-footer-brand">
+      <span class="jx-logo"><img class="jx-wordmark" src="assets/juttr-wordmark.svg" alt="Juttr" /></span>
+      <p>Local-first. No tracking.</p>
+    </div>
+    <div class="jx-footer-col">
+      <h4>Product</h4>
+      <a href="/#features">Features</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/account">Account / Billing</a>
+      <a href="/#blog">Blog</a>
+      <a data-store-link="footer" target="_blank" rel="noopener">Chrome Web Store</a>
+    </div>
+    <div class="jx-footer-col">
+      <h4>Company</h4>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms</a>
+      <p style="margin-top:14px;">Questions or support?</p>
+      <a href="mailto:info@juttr.cc">info@juttr.cc</a>
+    </div>
+  </div>
+  <div class="jx-footer-bottom">
+    © 2026 EverXt, LLC. Juttr is a product of EverXt, LLC.
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
+</body>
+</html>

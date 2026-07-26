@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Log in — Juttr</title>
-  <meta name="robots" content="noindex" />
+  <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#0f1117" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
   <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
@@ -144,12 +144,21 @@
   function showError(msg) { errorEl.textContent = msg; errorEl.hidden = false; }
   function setBusy(b) { btn.disabled = b; btn.textContent = b ? 'Signing in…' : 'Log in'; }
 
+  // The billing endpoints require proof that the caller controls the account —
+  // an email alone is not a credential. Here that proof is the login session.
+  async function sessionToken() {
+    try {
+      const s = await supabase.auth.getSession();
+      return s.data?.session?.access_token || '';
+    } catch (e) { return ''; }
+  }
+
   async function openPortal(email) {
     try {
       const r = await fetch('/api/create-portal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: email, access_token: await sessionToken() }),
       });
       const d = await r.json().catch(() => ({}));
       window.location.href = (r.ok && d.url) ? d.url : GENERIC_PORTAL;
@@ -193,7 +202,7 @@
       const r = await fetch('/api/subscription-status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: email, access_token: await sessionToken() }),
       });
       const d = await r.json().catch(() => ({}));
       if (r.ok && d.current_period_end) {
@@ -233,10 +242,14 @@
   // login flow and the set-password (auto-provisioned account) flow.
   async function verifyAndShow(email) {
     try {
+      // /api/check-user requires proof of possession — an email alone no longer
+      // returns a licence. Here that proof is the session we just established.
+      const sess = await supabase.auth.getSession();
+      const accessToken = sess.data?.session?.access_token || '';
       const res = await fetch('/api/check-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: email, access_token: accessToken }),
       });
       const info = await res.json().catch(() => ({}));
       if (res.ok && info.active) {
@@ -323,6 +336,13 @@
     resultActions.innerHTML = '';
   });
 </script>
+
+<footer class="legal-foot">
+  <a href="/privacy">Privacy Policy</a>
+  <a href="/terms">Terms</a>
+  <a href="mailto:info@juttr.cc">info@juttr.cc</a>
+  <span>© 2026 EverXt, LLC</span>
+</footer>
 
 </body>
 </html>

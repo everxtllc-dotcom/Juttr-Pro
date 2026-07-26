@@ -134,7 +134,7 @@ async function sendSetupEmail(email, link) {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'content-type': 'application/json' },
       body: JSON.stringify({
-        sender: { name: 'Juttr', email: process.env.MAIL_FROM || 'hello@juttr.cc' },
+        sender: { name: 'Juttr', email: process.env.MAIL_FROM || 'info@juttr.cc' },
         to: [{ email }],
         subject: 'Your Juttr Pro account — set your password',
         htmlContent:

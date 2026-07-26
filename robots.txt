@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
 
+# Authenticated / transactional pages — also carry <meta name="robots" content="noindex">
+Disallow: /account
+Disallow: /account.html
+Disallow: /success
+Disallow: /success.html
+Disallow: /api/
+
 Sitemap: https://www.juttr.cc/sitemap.xml

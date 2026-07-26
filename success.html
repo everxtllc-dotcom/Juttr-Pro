@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to Juttr Pro</title>
-  <meta name="robots" content="noindex" />
+  <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#0f1117" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
   <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
@@ -94,10 +94,13 @@
       manageBtn.disabled = true;
       manageBtn.textContent = 'Opening…';
       try {
+        // /api/create-portal requires proof the caller controls the account.
+        // Here that is the checkout session just completed — the only credential
+        // the buyer has before they set a password.
         const r = await fetch('/api/create-portal', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: customerEmail }),
+          body: JSON.stringify({ email: customerEmail, session_id: sessionId }),
         });
         const data = await r.json().catch(() => ({}));
         window.location.href = (r.ok && data.url) ? data.url : GENERIC_PORTAL;
@@ -134,6 +137,13 @@
       .catch(() => { keyEl.textContent = 'sub_…'; });
   })();
 </script>
+
+<footer class="legal-foot">
+  <a href="/privacy">Privacy Policy</a>
+  <a href="/terms">Terms</a>
+  <a href="mailto:info@juttr.cc">info@juttr.cc</a>
+  <span>© 2026 EverXt, LLC</span>
+</footer>
 
 </body>
 </html>

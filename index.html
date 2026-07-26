@@ -4,37 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Juttr — Stay utterly curious. | Private workspace in your new tab</title>
-<meta name="description" content="Juttr is the private, local-first workspace in your new tab. Jot every spark the moment it strikes and sort your ideas effortlessly. No account, no cloud, works offline." />
-
-<meta name="keywords" content="productivity chrome extension, capture ideas browser, tab manager alternative, browser workspace, focus timer, pomodoro chrome extension, task manager extension, distraction free workspace, local first app, deep work tool, all in one workspace chrome, no cloud task manager, save tabs for later" />
+  <title>Juttr: Utterly Curious | New Tab Productivity Workspace</title>
+<meta name="description" content="Juttr is a local-first new tab productivity workspace with tasks, notes, boards, calendar, focus tools, and local file storage for Chrome." />
+  <!-- PREVIEW ONLY — remove this tag at launch. See the checklist in DEPLOY.md.
+       Holds juttr-pro-1.vercel.app out of search so it cannot be indexed as a
+       duplicate of www.juttr.cc. -->
+  <meta name="robots" content="noindex, nofollow" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Juttr — Stay utterly curious." />
-  <meta property="og:description" content="Stay utterly curious. The private workspace in your new tab — jot every spark, sort your ideas, no account, no cloud, all local."/>
+  <meta property="og:title" content="Juttr: Utterly Curious | New Tab Productivity Workspace" />
+  <meta property="og:description" content="A local-first new tab productivity workspace for tasks, notes, boards, calendar and focus — stored on your device and in a local folder you control."/>
   <meta property="og:image" content="https://www.juttr.cc/assets/screens/og-cover.jpg" />
-  <meta property="og:url" content="https://www.juttr.cc" />
+  <meta property="og:url" content="https://www.juttr.cc/" />
   <meta property="og:type" content="website" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@Juttr_Ext" />
-  <meta name="twitter:title" content="Juttr — Stay utterly curious." />
-  <meta name="twitter:description" content="Stay utterly curious. The local-first workspace in your new tab — jot every spark, no account, no cloud." />
+  <meta name="twitter:title" content="Juttr: Utterly Curious | New Tab Productivity Workspace" />
+  <meta name="twitter:description" content="A local-first new tab productivity workspace for tasks, notes, boards, calendar and focus — stored on your device." />
   <meta name="twitter:image" content="https://www.juttr.cc/assets/screens/og-cover.jpg" />
 
-  <link rel="canonical" href="https://www.juttr.cc" />
+  <link rel="canonical" href="https://www.juttr.cc/" />
   <meta name="theme-color" content="#0d1117" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
 
-  <!-- Set theme before paint (no flash) -->
+  <!-- Set theme before paint (no flash). Dark is the only theme the site ships;
+       site.js re-asserts it, so this must agree or the page flashes light. -->
   <script>
-    (function () {
-      try {
-        var t = localStorage.getItem('juttr-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', t);
-      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
-    })();
+    document.documentElement.setAttribute('data-theme', 'dark');
   </script>
 
   <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
@@ -49,14 +47,19 @@
     "@type": "SoftwareApplication",
     "name": "Juttr",
     "applicationCategory": "ProductivityApplication",
-    "operatingSystem": "Chrome, Edge, Firefox",
+    "operatingSystem": "Chrome",
     "offers": [
       { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
       { "@type": "Offer", "name": "Pro (monthly)", "price": "5", "priceCurrency": "USD" },
       { "@type": "Offer", "name": "Pro (yearly)", "price": "49", "priceCurrency": "USD" }
     ],
-    "description": "Local-first productivity workspace Chrome extension for developers and designers.",
-    "url": "https://www.juttr.cc"
+    "description": "A local-first new tab productivity workspace for Chrome with tasks, notes, boards, calendar, focus tools and local file storage. Workspace content is stored on your device and in a local folder you control; a Juttr account is required only for a Pro subscription.",
+    "url": "https://www.juttr.cc/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "EverXt, LLC",
+      "url": "https://www.juttr.cc/"
+    }
   }
   </script>
 </head>
@@ -97,22 +100,23 @@
   <div class="jx-hero-inner reveal">
     <h1>Stay <em>utterly curious.</em></h1>
     <p class="jx-hero-sub">
-      Jot every spark the moment it strikes. Juttr lives in your new tab, quietly sorting
-      your ideas into boards, notes, and tasks — so nothing gets lost, and nothing piles up.
+      Juttr is a local-first new tab productivity workspace. Jot every spark the moment it
+      strikes — sorted into boards, notes, and tasks, stored on your device and in a local
+      folder you control.
     </p>
     <div class="jx-hero-actions">
       <a class="jx-btn jx-btn-accent jx-btn-lg" data-store-link="hero" target="_blank" rel="noopener">Get Juttr for Chrome</a>
       <a class="jx-btn jx-btn-outline jx-btn-lg" href="#philosophy">Why Juttr →</a>
     </div>
     <div class="jx-trust">
-      <span>✓ No account required</span>
+      <span>✓ Free to start — no account needed</span>
       <span>✓ Works offline</span>
-      <span>✓ Your data never leaves your device</span>
+      <span>✓ Your workspace stays on your device</span>
     </div>
   </div>
   <div class="jx-hero-visual reveal">
     <img src="assets/screens/dark-dashboard.webp" width="1600" height="1000" data-parallax="0.05"
-         alt="Juttr productivity Chrome extension workspace showing task manager, calendar and focus timer" />
+         alt="Juttr new tab productivity workspace showing the dashboard with tasks, calendar and focus timer in a Chrome new tab" />
   </div>
 </header>
 
@@ -121,7 +125,7 @@
   <div class="jx-wrap">
     <div class="jx-section-head reveal">
       <p class="jx-eyebrow">Ten modules, one tab</p>
-      <h2 class="jx-h2">Everything a developer or designer needs — without the tab overload</h2>
+      <h2 class="jx-h2">One new tab productivity workspace — without the tab overload</h2>
     </div>
     <div class="jx-feature-grid reveal">
 
@@ -261,9 +265,24 @@
         <span class="jx-vs-no">Not this</span>
         <p>Your saves and notes mined on someone's server.</p>
         <span class="jx-vs-yes">This</span>
-        <p class="jx-vs-right">Everything stays on your device. There is nothing to send.</p>
+        <p class="jx-vs-right">Your workspace stays on your device — in a local folder you control.</p>
       </div>
     </div>
+
+    <!-- What is local, and what is not — the honest split. -->
+    <div class="jx-split reveal">
+      <div class="jx-split-card">
+        <h3>Stays on your device</h3>
+        <p>Tasks, notes, boards, calendar entries, focus records, settings, and the files you open. Stored in your browser and in a local folder you pick. Juttr does not receive this content.</p>
+      </div>
+      <div class="jx-split-card">
+        <h3>All we hold about you</h3>
+        <p>An email address for your account sign-in (Supabase), and a subscription record if you buy Pro (Stripe). That's it — no mailing list, no name, no tracking. The site runs on Vercel.</p>
+      </div>
+    </div>
+    <p class="jx-split-note reveal">
+      Free features work without an account. Read the detail in our <a href="/privacy">Privacy Policy</a>.
+    </p>
 
     <!-- Campaign band (§6.3) — links to Instagram -->
     <div class="jx-poster-band reveal">
@@ -273,7 +292,7 @@
       </a>
       <a class="jx-poster" href="https://www.instagram.com/juttr_ext/" target="_blank" rel="noopener" aria-label="Juttr on Instagram — Your workspace should not phone home">
         <span class="jx-poster-head">Your workspace should not <em>phone home</em>.</span>
-        <span class="jx-poster-sub">No account. No cloud. No telemetry.</span>
+        <span class="jx-poster-sub">Local workspace. No telemetry.</span>
       </a>
       <a class="jx-poster" href="https://www.instagram.com/juttr_ext/" target="_blank" rel="noopener" aria-label="Juttr on Instagram — Capture now, focus now, return later">
         <span class="jx-poster-head">Capture now. Focus now. <em>Return later</em>.</span>
@@ -310,20 +329,20 @@
           </div>
           <div class="ctrl">
             <span class="ctrl-label">Accent</span>
-            <div class="swatches" id="swatches">
-              <button class="swatch active" data-color="#2dd4bf" style="--c:#2dd4bf"></button>
-              <button class="swatch" data-color="#5b8def" style="--c:#5b8def"></button>
-              <button class="swatch" data-color="#f472b6" style="--c:#f472b6"></button>
-              <button class="swatch" data-color="#fbbf24" style="--c:#fbbf24"></button>
-              <button class="swatch" data-color="#a78bfa" style="--c:#a78bfa"></button>
+            <div class="swatches" id="swatches" role="group" aria-label="Accent colour">
+              <button class="swatch active" type="button" data-color="#2dd4bf" style="--c:#2dd4bf" aria-label="Teal accent"></button>
+              <button class="swatch" type="button" data-color="#5b8def" style="--c:#5b8def" aria-label="Blue accent"></button>
+              <button class="swatch" type="button" data-color="#f472b6" style="--c:#f472b6" aria-label="Pink accent"></button>
+              <button class="swatch" type="button" data-color="#fbbf24" style="--c:#fbbf24" aria-label="Amber accent"></button>
+              <button class="swatch" type="button" data-color="#a78bfa" style="--c:#a78bfa" aria-label="Violet accent"></button>
             </div>
           </div>
           <div class="ctrl grow">
-            <span class="ctrl-label">Panel opacity <em id="opacityVal">78%</em></span>
+            <label class="ctrl-label" for="opacitySlider">Panel opacity <em id="opacityVal">78%</em></label>
             <input type="range" id="opacitySlider" min="10" max="100" value="78" />
           </div>
           <div class="ctrl grow">
-            <span class="ctrl-label">Background blur <em id="blurVal">14px</em></span>
+            <label class="ctrl-label" for="blurSlider">Background blur <em id="blurVal">14px</em></label>
             <input type="range" id="blurSlider" min="0" max="32" value="14" />
           </div>
           <label class="upload-btn">
@@ -494,6 +513,13 @@
           <button class="jx-btn jx-btn-accent jx-btn-lg" type="button" data-checkout="yearly">Get Pro — $24 first year</button>
           <button class="jx-btn jx-btn-outline" type="button" data-checkout="monthly">Monthly — $3/mo first year</button>
         </div>
+        <!-- Terms of sale must be visible before checkout (Chrome Web Store
+             program policy + EU consumer law). Keep in sync with /terms §5–§6. -->
+        <p class="jx-price-terms">
+          Renews automatically until cancelled. Cancel any time from the billing portal.
+          Full refund within 14 days of your first charge. By subscribing you agree to our
+          <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.
+        </p>
         <p class="jx-price-err" data-checkout-error role="alert" hidden></p>
       </div>
 
@@ -573,18 +599,27 @@
       <div class="jx-std-copy">
         <p class="jx-eyebrow">On your phone?</p>
         <h2 class="jx-h2">Send Juttr to your desktop.</h2>
-        <p class="jx-sub">Juttr lives in your desktop browser. Drop your email and we'll send the install link so it's waiting when you sit down.</p>
+        <p class="jx-sub">Juttr lives in your desktop browser. Drop your email and we'll send the install link so it's waiting when you sit down. We don't store the address.</p>
       </div>
-      <form class="jx-std-form" id="stdForm" novalidate>
+      <!-- Declarative WebMCP: lets an AI browsing agent fill this form. There is no
+           toolautosubmit, so the visitor still reviews the address and clicks Submit. -->
+      <form class="jx-std-form" id="stdForm" novalidate
+            toolname="send_juttr_install_link"
+            tooldescription="Email the Juttr Chrome installation link to the user.">
         <div class="jx-std-row">
-          <input type="email" id="stdEmail" name="email" autocomplete="email" placeholder="you@example.com" required aria-label="Email address" />
+          <label class="jx-sr-only" for="stdEmail">Email address</label>
+          <input type="email" id="stdEmail" name="email" autocomplete="email" placeholder="you@example.com" required
+                 toolparamdescription="Email address that should receive the Juttr installation link." />
           <button type="submit" class="jx-btn jx-btn-accent" id="stdSubmit">Send me the link</button>
         </div>
         <!-- Honeypot -->
         <div class="lead-hp" aria-hidden="true">
           <label>Company<input type="text" id="stdCompany" tabindex="-1" autocomplete="off" /></label>
         </div>
-        <p class="jx-std-note">One email. The link. Nothing else.</p>
+        <p class="jx-std-note">
+          Used once to send the link, then discarded — no list, no follow-ups.
+          See our <a href="/privacy">Privacy Policy</a>.
+        </p>
         <p class="jx-std-msg" id="stdMsg" role="status"></p>
       </form>
     </div>
@@ -597,7 +632,7 @@
 <section class="jx-cta">
   <div class="reveal">
     <h2>Curiosity without the clutter.</h2>
-    <p>Add Juttr to Chrome in 30 seconds. No account needed — there's nothing to sign up for.</p>
+    <p>Add Juttr to Chrome in 30 seconds. Free to start — an account is only needed for Pro.</p>
     <div class="jx-hero-actions">
       <a class="jx-btn jx-btn-accent jx-btn-lg" data-store-link="cta" target="_blank" rel="noopener">Get Juttr for Chrome</a>
       <a class="jx-btn jx-btn-outline jx-btn-lg" href="#pricing">Go Pro — $24 first year</a>
@@ -610,7 +645,7 @@
   <div class="jx-footer-grid">
     <div class="jx-footer-brand">
       <span class="jx-logo"><img class="jx-wordmark" src="assets/juttr-wordmark.svg" alt="Juttr" /></span>
-      <p>Curiosity without the clutter.<br />Zero cloud. No tracking.</p>
+      <p>Curiosity without the clutter.<br />Local-first. No tracking.</p>
     </div>
     <div class="jx-footer-col">
       <h4>Product</h4>
@@ -619,14 +654,13 @@
       <a href="/account">Account / Billing</a>
       <a href="#blog">Blog</a>
       <a data-store-link="footer" target="_blank" rel="noopener">Chrome Web Store</a>
-      <a href="#features">Edge Add-ons</a>
     </div>
     <div class="jx-footer-col">
       <h4>Company</h4>
-      <a href="#privacy">Privacy Policy</a>
-      <a href="#terms">Terms</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms</a>
       <p style="margin-top:14px;">Questions or support?</p>
-      <a href="mailto:support@juttr.cc">support@juttr.cc</a>
+      <a href="mailto:info@juttr.cc">info@juttr.cc</a>
       <span class="jx-social">
         <a href="https://www.instagram.com/juttr_ext/" target="_blank" rel="noopener" aria-label="Juttr on Instagram">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
@@ -641,50 +675,9 @@
     </div>
   </div>
   <div class="jx-footer-bottom">
-    © 2026 Juttr. All rights reserved. Built for developers who value their focus.
+    © 2026 EverXt, LLC. Juttr is a product of EverXt, LLC. Built for developers who value their focus.
   </div>
 </footer>
-
-<!-- ════════════════ LEAD-CAPTURE MODAL ════════════════ -->
-<div class="lead-modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="leadTitle" aria-hidden="true">
-  <div class="lead-backdrop" data-lead-close></div>
-  <div class="lead-card">
-    <button class="lead-close" type="button" aria-label="Close" data-lead-close>
-      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-    <div class="lead-logo"><img class="jx-wordmark" src="assets/juttr-wordmark.svg" alt="Juttr" /></div>
-    <h3 class="lead-title" id="leadTitle">Get Juttr free</h3>
-    <p class="lead-sub">Add your name and email and we'll take you straight to the Chrome Web Store. We'll only use it to share Juttr news — no spam, unsubscribe anytime.</p>
-
-    <form class="lead-form" id="leadForm" novalidate>
-      <label class="lead-field">
-        <span>Name</span>
-        <input type="text" name="name" id="leadName" autocomplete="name" placeholder="Your name" required />
-      </label>
-      <label class="lead-field">
-        <span>Email</span>
-        <input type="email" name="email" id="leadEmail" autocomplete="email" placeholder="you@example.com" required />
-      </label>
-
-      <!-- Honeypot: hidden from humans, catches bots -->
-      <div class="lead-hp" aria-hidden="true">
-        <label>Company<input type="text" name="company" id="leadCompany" tabindex="-1" autocomplete="off" /></label>
-      </div>
-
-      <label class="lead-check">
-        <input type="checkbox" id="leadOptin" checked />
-        <span>Email me occasional Juttr product updates.</span>
-      </label>
-
-      <p class="lead-error" id="leadError" role="alert"></p>
-
-      <button type="submit" class="jx-btn jx-btn-accent jx-btn-lg lead-submit" id="leadSubmit">
-        Continue to Chrome Web Store
-      </button>
-      <p class="lead-skip" id="leadSkip" hidden></p>
-    </form>
-  </div>
-</div>
 
 <script src="js/site.js"></script>
 <script src="js/widgets.js"></script>

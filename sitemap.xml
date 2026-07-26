@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Canonical, extensionless URLs only. vercel.json sets cleanUrls:true, which
+  308-redirects /foo.html to /foo, so the .html forms must never appear here.
+
+  WHILE THE SITE IS A PREVIEW, every page below also carries
+  <meta name="robots" content="noindex, nofollow">. That is deliberate, not an
+  oversight: a crawler reads this sitemap, fetches the page, sees the noindex
+  and declines to index it — which is exactly the intent until the domain moves.
+  A link checker will flag "in sitemap but noindex"; expect that until launch.
+
+  The URLs themselves are already correct for production, so launch is only:
+  delete the robots meta tags (see DEPLOY.md), then add the two blocks below.
+
+  /privacy and /terms are intentionally ABSENT pending legal sign-off:
+    <url><loc>https://www.juttr.cc/privacy</loc>
+         <changefreq>yearly</changefreq><priority>0.3</priority></url>
+    <url><loc>https://www.juttr.cc/terms</loc>
+         <changefreq>yearly</changefreq><priority>0.3</priority></url>
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.juttr.cc/</loc>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.juttr.cc/blog/multitasking-myth</loc>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.juttr.cc/blog/context-switching</loc>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.juttr.cc/blog/clear-your-mind</loc>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

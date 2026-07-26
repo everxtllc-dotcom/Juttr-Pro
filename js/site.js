@@ -1,7 +1,7 @@
 /* ════════════════════════════════════════════════════════════
    Juttr site — shared interactions (all pages)
-   Theme toggle · nav scroll · scroll reveal · lead-capture modal
-   (/api/subscribe) · store links · pricing checkout (/api/create-checkout)
+   Theme · nav scroll · scroll reveal · store links (direct, nothing collected)
+   send-to-desktop (/api/send-install-link) · pricing checkout (/api/create-checkout)
    ════════════════════════════════════════════════════════════ */
 
 // ⬇️  Live Chrome Web Store listing for Juttr.
@@ -66,155 +66,18 @@ if (reduceMotion) {
   revealEls.forEach((el) => io.observe(el));
 }
 
-// ─────────────── Store links + lead capture ───────────────
-// "Add to Chrome" links ask for a name + email once, store it in Supabase (via
-// /api/subscribe), remember the visitor, then open the store.
-const LEAD_KEY = 'juttr_lead';
-const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-const SUBMIT_LABEL = 'Continue to Chrome Web Store';
-
-const hasLead = () => { try { return !!localStorage.getItem(LEAD_KEY); } catch { return false; } };
-const rememberLead = (email, saved) => {
-  try { localStorage.setItem(LEAD_KEY, JSON.stringify({ email, saved, at: Date.now() })); } catch {}
-};
-const goToStore = () => {
-  const w = window.open(CHROME_STORE_URL, '_blank', 'noopener');
-  if (!w) window.location.href = CHROME_STORE_URL;
-};
-
-const leadModal = document.getElementById('leadModal');
-const leadForm = document.getElementById('leadForm');
-const leadName = document.getElementById('leadName');
-const leadEmail = document.getElementById('leadEmail');
-const leadCompany = document.getElementById('leadCompany');
-const leadOptin = document.getElementById('leadOptin');
-const leadError = document.getElementById('leadError');
-const leadSubmit = document.getElementById('leadSubmit');
-const leadSkip = document.getElementById('leadSkip');
-
-let leadSource = 'site';
-let lastFocused = null;
-
-function openLeadModal(source) {
-  if (!leadModal) { goToStore(); return; }
-  leadSource = source;
-  lastFocused = document.activeElement;
-  leadError.textContent = '';
-  leadSkip.hidden = true;
-  leadSkip.innerHTML = '';
-  leadSubmit.disabled = false;
-  leadSubmit.textContent = SUBMIT_LABEL;
-  leadName.classList.remove('invalid');
-  leadEmail.classList.remove('invalid');
-  leadModal.classList.add('is-open');
-  leadModal.setAttribute('aria-hidden', 'false');
-  document.body.classList.add('lead-open');
-  setTimeout(() => { try { leadName.focus(); } catch {} }, 60);
-  document.addEventListener('keydown', onLeadKey);
-}
-
-function closeLeadModal() {
-  if (!leadModal) return;
-  leadModal.classList.remove('is-open');
-  leadModal.setAttribute('aria-hidden', 'true');
-  document.body.classList.remove('lead-open');
-  document.removeEventListener('keydown', onLeadKey);
-  if (lastFocused && lastFocused.focus) { try { lastFocused.focus(); } catch {} }
-}
-
-function onLeadKey(e) {
-  if (e.key === 'Escape') { closeLeadModal(); return; }
-  if (e.key === 'Tab') trapFocus(e);
-}
-
-function trapFocus(e) {
-  const sel = 'a[href], button:not([disabled]), input:not([tabindex="-1"])';
-  const list = Array.from(leadModal.querySelectorAll(sel)).filter((el) => el.offsetParent !== null);
-  if (!list.length) return;
-  const first = list[0];
-  const last = list[list.length - 1];
-  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-}
+// ─────────────── Store links ───────────────
+// Every 'Add to Chrome' CTA is a plain link straight to the Chrome Web Store.
+// Nothing is asked for, stored, or sent before the visitor reaches the store.
+const EMAIL_RE = /^[^@s]+@[^@s]+.[^@s]+$/;
 
 document.querySelectorAll('[data-store-link]').forEach((a) => {
   if (a.tagName === 'A') a.href = CHROME_STORE_URL;
-  a.addEventListener('click', (e) => {
-    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    if (hasLead()) { if (a.tagName !== 'A') goToStore(); return; }
-    e.preventDefault();
-    openLeadModal(a.getAttribute('data-store-link') || 'site');
-  });
 });
 
-if (leadModal) {
-  leadModal.querySelectorAll('[data-lead-close]').forEach((el) => el.addEventListener('click', closeLeadModal));
-}
-
-if (leadForm) {
-  leadForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = leadName.value.trim();
-    const email = leadEmail.value.trim();
-    leadName.classList.toggle('invalid', !name);
-    leadEmail.classList.toggle('invalid', !EMAIL_RE.test(email));
-    if (!name) { leadError.textContent = 'Please enter your name.'; leadName.focus(); return; }
-    if (!EMAIL_RE.test(email)) { leadError.textContent = 'Please enter a valid email address.'; leadEmail.focus(); return; }
-    leadError.textContent = '';
-
-    leadSubmit.disabled = true;
-    leadSubmit.textContent = 'One moment…';
-
-    const payload = {
-      name, email,
-      source: leadSource,
-      opt_in: !!(leadOptin && leadOptin.checked),
-      hp: leadCompany ? leadCompany.value : '',
-    };
-
-    let ok = false;
-    try {
-      const ctrl = new AbortController();
-      const t = setTimeout(() => ctrl.abort(), 7000);
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(payload),
-        signal: ctrl.signal,
-      });
-      clearTimeout(t);
-      ok = res.ok;
-    } catch { ok = false; }
-
-    if (ok) {
-      rememberLead(email, true);
-      goToStore();
-      closeLeadModal();
-    } else {
-      leadSubmit.disabled = false;
-      leadSubmit.textContent = SUBMIT_LABEL;
-      leadError.textContent = "We couldn't save that just now — you can still continue.";
-      leadSkip.hidden = false;
-      leadSkip.innerHTML = '';
-      const link = document.createElement('a');
-      link.href = CHROME_STORE_URL;
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.textContent = 'Continue to the store anyway →';
-      link.addEventListener('click', () => { rememberLead(email, false); closeLeadModal(); });
-      leadSkip.appendChild(link);
-    }
-  });
-
-  [leadName, leadEmail].forEach((el) => el && el.addEventListener('input', () => {
-    el.classList.remove('invalid');
-    if (leadError.textContent) leadError.textContent = '';
-  }));
-}
-
 // ─────────────── Send-to-desktop (mobile → desktop email bridge) ───────────────
-// One field, one button. Stores the lead via /api/subscribe with source
-// "send-to-desktop"; the backend emails the install link when configured.
+// One field, one button. POSTs the address to /api/send-install-link, which mails
+// the install link and stores NOTHING. No name, no marketing list, no opt-in.
 const stdForm = document.getElementById('stdForm');
 if (stdForm) {
   const stdEmail = document.getElementById('stdEmail');
@@ -243,14 +106,11 @@ if (stdForm) {
     try {
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 7000);
-      const res = await fetch('/api/subscribe', {
+      const res = await fetch('/api/send-install-link', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          name: email.split('@')[0],
           email,
-          source: 'send-to-desktop',
-          opt_in: true,
           hp: stdCompany ? stdCompany.value : '',
         }),
         signal: ctrl.signal,
@@ -262,7 +122,6 @@ if (stdForm) {
     stdSubmit.disabled = false;
     stdSubmit.textContent = STD_LABEL;
     if (ok) {
-      rememberLead(email, true);
       stdForm.querySelector('.jx-std-row').hidden = true;
       stdMsg.textContent = 'Done — the install link is on its way to your inbox.';
     } else {

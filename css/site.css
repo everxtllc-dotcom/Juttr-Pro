@@ -50,8 +50,7 @@
 .jx-logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 18px; letter-spacing: -0.02em; color: var(--text-primary); }
 .jx-logo img { width: 26px; height: 26px; border-radius: 7px; }
 /* Brand wordmark — replaces the mark + "Juttr" text lockup (never both together). */
-.jx-logo img.jx-wordmark,
-.lead-logo img.jx-wordmark { width: auto; height: 24px; border-radius: 0; }
+.jx-logo img.jx-wordmark { width: auto; height: 24px; border-radius: 0; }
 .jx-nav-links { display: flex; align-items: center; gap: 30px; }
 .jx-nav-links a { font-size: 14px; color: var(--text-secondary); transition: color 0.2s; }
 .jx-nav-links a:hover { color: var(--text-primary); }
@@ -171,29 +170,8 @@
 .jx-footer-bottom { max-width: var(--maxw); margin: 40px auto 0; padding: 22px 0; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-secondary); text-align: center; }
 
 /* ─────────────── Lead-capture modal ─────────────── */
-.lead-modal { position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
-.lead-modal.is-open { display: flex; }
-.lead-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-.lead-card { position: relative; width: 100%; max-width: 440px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 32px 30px; box-shadow: 0 40px 90px -30px var(--shadow); animation: leadIn 0.2s var(--ease); }
-@keyframes leadIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
-.lead-close { position: absolute; top: 16px; right: 16px; width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.lead-close:hover { color: var(--text-primary); }
-.lead-logo { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--text-primary); margin-bottom: 14px; }
-.lead-mark { width: 18px; height: 18px; border-radius: 5px; background: var(--accent); }
-.lead-title { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; color: var(--text-primary); }
-.lead-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.55; margin: 8px 0 20px; }
-.lead-field { display: block; margin-bottom: 14px; }
-.lead-field span { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
-.lead-field input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 14px; font-size: 14px; font-family: var(--sans); color: var(--text-primary); outline: none; transition: border-color 0.2s; }
-.lead-field input:focus { border-color: var(--accent); }
-.lead-field input.invalid { border-color: #e5484d; }
 .lead-hp { position: absolute; left: -9999px; opacity: 0; }
-.lead-check { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; cursor: pointer; }
-.lead-error { color: #e5484d; font-size: 13px; min-height: 18px; margin-bottom: 6px; }
-.lead-submit { width: 100%; }
-.lead-skip { text-align: center; margin-top: 14px; font-size: 13px; }
-.lead-skip a { color: var(--accent); font-weight: 600; }
-body.lead-open { overflow: hidden; }
+
 
 /* ─────────────── Blog article ─────────────── */
 .jx-article { max-width: 720px; margin: 0 auto; padding: 56px 28px 0; }
@@ -230,9 +208,19 @@ body.lead-open { overflow: hidden; }
 @media (max-width: 680px) {
   .jx-section { padding: 72px 0; }
   .jx-features { padding-top: 92px; margin-top: 32px; }
-  .jx-feature-grid, .jx-blog-grid, .jx-stat-grid, .jx-price-grid { grid-template-columns: 1fr; }
+  /* minmax(0, 1fr), not 1fr — a bare 1fr is minmax(auto, 1fr) and refuses to
+     shrink below the track's min-content, which overflowed the viewport. */
+  .jx-feature-grid, .jx-blog-grid, .jx-stat-grid, .jx-price-grid { grid-template-columns: minmax(0, 1fr); }
   .jx-price-grid { max-width: 440px; }
-  .jx-footer-grid { grid-template-columns: 1fr; }
+  .jx-footer-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* At iPhone-SE width the long pricing button labels ("Monthly — $3/mo first
+   year") are what set that min-content, because .jx-btn is nowrap. Let just
+   these wrap; every other button on the site keeps its single-line shape. */
+@media (max-width: 380px) {
+  .jx-price-card { padding: 30px 20px; }
+  .jx-price-actions .jx-btn { white-space: normal; }
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -353,11 +341,51 @@ body.lead-open { overflow: hidden; }
 .jx-std-msg { font-size: 13.5px; min-height: 20px; margin-top: 8px; color: var(--accent); font-weight: 500; }
 .jx-std-msg.err { color: #e5484d; }
 
+/* ── Terms of sale, shown under the Pro checkout buttons ── */
+.jx-price-terms { font-size: 12px; line-height: 1.55; color: var(--text-secondary); margin-top: 14px; text-align: center; }
+.jx-price-terms a { color: var(--accent); }
+
+/* ── Consent + privacy notices beside email forms ── */
+
+.jx-std-note a { color: var(--accent); }
+
+/* ── What is local vs. what is not ── */
+.jx-split { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 28px; }
+.jx-split-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 22px 24px; }
+.jx-split-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+.jx-split-card p { font-size: 14px; line-height: 1.65; color: var(--text-secondary); }
+.jx-split-note { font-size: 13.5px; color: var(--text-secondary); margin-top: 16px; text-align: center; }
+.jx-split-note a { color: var(--accent); }
+
+/* ── Legal pages (/privacy, /terms) ── */
+.jx-legal { max-width: 760px; margin: 0 auto; padding: 56px 28px 72px; }
+.jx-legal h2 { font-size: clamp(20px, 2.6vw, 25px); font-weight: 600; letter-spacing: -0.02em; color: var(--text-primary); margin: 44px 0 12px; }
+.jx-legal h3 { font-size: 17px; font-weight: 600; color: var(--text-primary); margin: 26px 0 10px; }
+.jx-legal ul { margin: 0 0 18px; padding-left: 22px; }
+.jx-legal li { font-size: 16px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 9px; }
+.jx-legal li strong, .jx-legal p strong { color: var(--text-primary); }
+.jx-legal a { color: var(--accent); }
+.jx-legal-updated { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; color: var(--text-secondary); margin-bottom: 28px; }
+.jx-legal-lede {
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 22px 24px; margin-bottom: 12px;
+}
+.jx-legal-lede p { margin-bottom: 0; font-size: 15.5px; }
+.jx-legal-toc { margin: 28px 0 8px; padding: 0; list-style: none; columns: 2; column-gap: 28px; }
+.jx-legal-toc li { margin-bottom: 6px; font-size: 14.5px; }
+/* Unresolved legal field awaiting owner sign-off — must be empty before launch. */
+.jx-legal-todo {
+  background: #fde68a; color: #713f12; font-family: var(--mono);
+  font-size: 0.86em; font-weight: 600; padding: 1px 6px; border-radius: 4px;
+}
+@media (max-width: 640px) { .jx-legal-toc { columns: 1; } }
+
 /* ── Responsive ── */
 @media (max-width: 940px) {
   .jx-vs-grid, .jx-poster-band { grid-template-columns: 1fr; }
   .jx-poster { min-height: 220px; }
   .jx-std-card { grid-template-columns: 1fr; gap: 24px; padding: 36px 28px; }
+  .jx-split { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   .jx-std-row { flex-direction: column; }

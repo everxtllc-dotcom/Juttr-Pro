@@ -23,6 +23,7 @@ import {
   resolveByEmail,
   toStatusPayload,
 } from './_stripe.js';
+import { authorizeCaller } from './_auth.js';
 
 export default async function handler(req, res) {
   // CORS — allow the Chrome extension origin.
@@ -52,16 +53,21 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'invalid_email' });
   }
 
+  // SECURITY: this returns plan, price and renewal date. It previously fell back
+  // to a bare email lookup, so anyone who knew a customer's address could read
+  // their billing details. Require proof of control first; on failure reply
+  // exactly as for an unknown account so addresses cannot be enumerated.
+  if (!(await authorizeCaller(email, body))) {
+    return res.status(404).json({ error: 'no_customer' });
+  }
+
   try {
     const result = licenseKey
       ? await resolveByLicenseKey({ email, licenseKey })
       : await resolveByEmail(email);
 
     if (!result.ok) {
-      // Distinguish "no active sub" (200, not Pro) from a caller mistake (4xx).
-      const status =
-        result.error === 'email_mismatch' || result.error === 'invalid_key' ? 403 : 404;
-      return res.status(status).json({ error: result.error });
+      return res.status(404).json({ error: 'no_customer' });
     }
 
     return res.status(200).json(toStatusPayload(result.sub, result.customer));

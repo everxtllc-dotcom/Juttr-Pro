@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Context Switching Costs You 2 Hours a Day | Juttr Blog</title>
-  <meta name="description" content="Every tool switch costs your brain time and energy. Research shows 2+ hours lost daily. Here's how to reclaim your focus." />
+  <title>How to Reduce Context Switching (It Costs You 2 Hours a Day) | Juttr</title>
+  <meta name="description" content="Every tool switch costs your brain time and energy. Research shows 2+ hours lost daily. Here's how to reduce context switching and reclaim your focus." />
 
   <meta property="og:title" content="Context Switching is Costing You 2 Hours Every Day" />
   <meta property="og:description" content="Every tool switch costs your brain time and energy. Research shows 2+ hours lost daily. Here's how to reclaim your focus." />
@@ -15,21 +15,52 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="canonical" href="https://www.juttr.cc/blog/context-switching" />
+  <!-- PREVIEW ONLY — remove this tag at launch. See the checklist in DEPLOY.md.
+       Holds juttr-pro-1.vercel.app out of search so it cannot be indexed as a
+       duplicate of www.juttr.cc. -->
+  <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#0d1117" />
   <link rel="icon" type="image/png" href="../assets/logo.png" />
 
   <script>
-    (function () {
-      try {
-        var t = localStorage.getItem('juttr-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', t);
-      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
-    })();
+    document.documentElement.setAttribute('data-theme', 'dark');
   </script>
 
   <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="../css/theme.css" />
   <link rel="stylesheet" href="../css/site.css" />
+
+  <!-- Article structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Context Switching is Costing You 2 Hours Every Day",
+    "description": "Every tool switch costs your brain time and energy. Research shows 2+ hours lost daily. Here’s how to reduce context switching and reclaim your focus.",
+    "datePublished": "2026-06-27",
+    "dateModified": "2026-07-26",
+    "author": {
+      "@type": "Organization",
+      "name": "Juttr",
+      "url": "https://www.juttr.cc/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "EverXt, LLC",
+      "url": "https://www.juttr.cc/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.juttr.cc/assets/logo.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://www.juttr.cc/blog/context-switching"
+    },
+    "url": "https://www.juttr.cc/blog/context-switching",
+    "image": "https://www.juttr.cc/assets/screens/og-cover.jpg"
+  }
+  </script>
 </head>
 <body>
 
@@ -93,7 +124,7 @@
   <div class="jx-footer-grid">
     <div class="jx-footer-brand">
       <span class="jx-logo"><img class="jx-wordmark" src="../assets/juttr-wordmark.svg" alt="Juttr" /></span>
-      <p>Zero latency. Zero cloud. No tracking.</p>
+      <p>Zero latency. Local-first. No tracking.</p>
     </div>
     <div class="jx-footer-col">
       <h4>Product</h4>
@@ -104,38 +135,16 @@
     </div>
     <div class="jx-footer-col">
       <h4>Company</h4>
-      <a href="../index.html#privacy">Privacy Policy</a>
-      <a href="../index.html#terms">Terms</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms</a>
       <p style="margin-top:14px;">Questions or support?</p>
-      <a href="mailto:support@juttr.cc">support@juttr.cc</a>
+      <a href="mailto:info@juttr.cc">info@juttr.cc</a>
     </div>
   </div>
   <div class="jx-footer-bottom">
-    © 2026 Juttr. All rights reserved. Built for developers who value their focus.
+    © 2026 EverXt, LLC. Juttr is a product of EverXt, LLC. Built for developers who value their focus.
   </div>
 </footer>
-
-<!-- Lead-capture modal -->
-<div class="lead-modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="leadTitle" aria-hidden="true">
-  <div class="lead-backdrop" data-lead-close></div>
-  <div class="lead-card">
-    <button class="lead-close" type="button" aria-label="Close" data-lead-close>
-      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-    <div class="lead-logo"><img class="jx-wordmark" src="../assets/juttr-wordmark.svg" alt="Juttr" /></div>
-    <h3 class="lead-title" id="leadTitle">Get Juttr free</h3>
-    <p class="lead-sub">Add your name and email and we'll take you straight to the Chrome Web Store. We'll only use it to share Juttr news — no spam, unsubscribe anytime.</p>
-    <form class="lead-form" id="leadForm" novalidate>
-      <label class="lead-field"><span>Name</span><input type="text" name="name" id="leadName" autocomplete="name" placeholder="Your name" required /></label>
-      <label class="lead-field"><span>Email</span><input type="email" name="email" id="leadEmail" autocomplete="email" placeholder="you@example.com" required /></label>
-      <div class="lead-hp" aria-hidden="true"><label>Company<input type="text" name="company" id="leadCompany" tabindex="-1" autocomplete="off" /></label></div>
-      <label class="lead-check"><input type="checkbox" id="leadOptin" checked /><span>Email me occasional Juttr product updates.</span></label>
-      <p class="lead-error" id="leadError" role="alert"></p>
-      <button type="submit" class="jx-btn jx-btn-accent jx-btn-lg lead-submit" id="leadSubmit">Continue to Chrome Web Store</button>
-      <p class="lead-skip" id="leadSkip" hidden></p>
-    </form>
-  </div>
-</div>
 
 <script src="../js/site.js"></script>
 </body>
