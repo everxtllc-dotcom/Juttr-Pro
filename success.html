@@ -40,7 +40,7 @@
       </div>
       <p class="license-hint" id="licenseHint">
         Also in your Stripe receipt email, or anytime at
-        <a href="https://billing.stripe.com/p/login" target="_blank" rel="noopener">your billing portal</a>.
+        <a href="/account">your account</a>.
       </p>
     </div>
 
@@ -82,7 +82,14 @@
     const manageBtn = document.getElementById('manageBilling');
     let customerEmail = null;
 
-    const GENERIC_PORTAL = 'https://billing.stripe.com/p/login';
+    // Fallback when we can't create a portal session directly (email unknown or
+    // /api/create-portal errors). Sending the user to /account lets them log in
+    // and open a real portal session. If you'd rather use Stripe's hosted
+    // email-login page, set this to your Customer Portal login link from the
+    // Stripe Dashboard (Settings → Billing → Customer portal → Login link),
+    // e.g. 'https://billing.stripe.com/p/login/xxxxxxxx'. The bare
+    // 'https://billing.stripe.com/p/login' is NOT valid and Stripe rejects it.
+    const GENERIC_PORTAL = '/account';
 
     // "Manage billing" → open the Stripe Customer Portal. When we know the
     // customer's email (resolved from the checkout session below) we go straight

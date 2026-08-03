@@ -40,7 +40,7 @@ leaked client can't forge Pro tokens.
 | `POST /api/check-user` | Activation + 7-day revalidation. Returns the signed token. |
 | `POST /api/create-checkout` | Creates a Stripe Checkout session (`{ plan: "monthly" \| "yearly" }`). |
 | `GET  /api/session?session_id=cs_…` | Resolves a completed Checkout to the `sub_` id for the success page. |
-| `POST /api/webhook` | Stripe webhook safety net (logs cancellations). |
+| `POST /api/webhook` | Stripe → Supabase sync: writes `profiles.subscription_status` and auto-provisions accounts. Required for Pro to persist. |
 
 ## One-time setup
 
@@ -64,9 +64,12 @@ openssl ec -in license_private.pem -pubout -out license_public.pem
    / `STRIPE_COUPON_YEARLY` — see `STRIPE_SETUP_GUIDE.md` Step 2. Do not create
    the prices at the discounted amounts; the coupon applies on top.
 2. Set `STRIPE_SECRET_KEY`.
-3. (Optional) Add a webhook endpoint pointing at `/api/webhook` for
-   `customer.subscription.deleted` and `customer.subscription.updated`; copy its
-   signing secret into `STRIPE_WEBHOOK_SECRET`.
+3. **Add the webhook (required).** Point an endpoint at `/api/webhook` for
+   `customer.subscription.created`, `customer.subscription.updated`, and
+   `customer.subscription.deleted`; copy its signing secret into
+   `STRIPE_WEBHOOK_SECRET`. This is what writes `profiles` in Supabase — without
+   it (and the `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` vars) Pro status is
+   never persisted and the table stays empty.
 
 ### 3. Extension
 Set the deployed origin in `src/config/license.ts` (`SITE_ORIGIN`) so
@@ -79,10 +82,13 @@ Set the deployed origin in `src/config/license.ts` (`SITE_ORIGIN`) so
    `sub_`) and a Copy button. Stripe also emails a receipt.
 2. They paste it into Juttr → **Settings → Subscription** with their email and
    click **Activate Pro**.
-3. Lost the key? It's in the Stripe receipt email, or at the customer billing
-   portal: <https://billing.stripe.com/p/login>.
+3. Lost the key? It's in the Stripe receipt email, or anytime at their account
+   page: <https://juttr.cc/account>.
 4. Admin lookup: Stripe Dashboard → Customers → search by email → open the
    customer → Subscriptions → copy the `sub_…` ID.
 
-Cancellation is handled automatically by the extension's 7-day revalidation (the
-webhook is just a faster-acting backstop and logs only).
+Cancellation flows from the webhook: Stripe fires `customer.subscription.deleted`,
+the webhook writes `subscription_status = canceled` to `profiles`, and the
+extension's 7-day revalidation (which reads that row via `check-user`) then drops
+Pro. The revalidation is the offline-tolerant fallback; the webhook keeps the
+database in sync in real time.

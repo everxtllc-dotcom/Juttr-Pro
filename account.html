@@ -116,7 +116,13 @@
   // Where verified users are sent. Point this at your app / dashboard URL.
   const DASHBOARD_URL = '/';
 
-  const GENERIC_PORTAL = 'https://billing.stripe.com/p/login';
+  // Fallback when /api/create-portal fails. Reloading /account is harmless (the
+  // user can retry) and avoids Stripe's error page. If you'd rather use Stripe's
+  // hosted email-login page, set this to your Customer Portal login link from the
+  // Stripe Dashboard (Settings → Billing → Customer portal → Login link),
+  // e.g. 'https://billing.stripe.com/p/login/xxxxxxxx'. The bare
+  // 'https://billing.stripe.com/p/login' is NOT valid and Stripe rejects it.
+  const GENERIC_PORTAL = '/account';
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   const form = document.getElementById('loginForm');

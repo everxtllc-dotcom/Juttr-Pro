@@ -77,13 +77,72 @@ async function getProfile(email) {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const query =
     `${url}/rest/v1/profiles?email=eq.${encodeURIComponent(email)}` +
-    `&select=email,subscription_status,stripe_customer_id,activation_key&limit=1`;
+    `&select=email,subscription_status,stripe_customer_id,activation_key,devices&limit=1`;
   const r = await fetch(query, {
     headers: { apikey: key, authorization: `Bearer ${key}`, accept: 'application/json' },
   });
   if (!r.ok) throw new Error(`supabase ${r.status}`);
   const rows = await r.json().catch(() => []);
   return Array.isArray(rows) ? rows[0] || null : null;
+}
+
+// ── Device seat cap ─────────────────────────────────────────────────────────
+// How many devices one subscription may run Pro on at once. Generous enough for
+// a normal person (desktop + laptop + one more) but low enough that sharing the
+// email + `sub_…` with a crowd makes everyone fight over the slots.
+const DEVICE_LIMIT = 3;
+
+/**
+ * Decide whether `deviceId` may hold a Pro seat, and return the devices list to
+ * persist. `devices` is the profile's current array of { device_id, last_seen }.
+ *
+ *   • Known device            → always allowed; refresh its last_seen.
+ *   • New device, activation   → admitted; if the cap is full, evict the
+ *                                least-recently-seen device (LRU) to make room.
+ *                                So an honest user is never locked out, and a
+ *                                reinstall reclaims its own stale slot.
+ *   • New device, revalidation → REJECTED (allowed:false). A background check
+ *                                never re-admits a device that was already
+ *                                evicted, so devices pushed past the cap by newer
+ *                                activations drop to Free at their next check.
+ *
+ * @returns { allowed: boolean, devices: array } — persist `devices` when allowed.
+ */
+function manageDevice(rawDevices, deviceId, isRevalidation) {
+  const list = (Array.isArray(rawDevices) ? rawDevices : [])
+    .filter((d) => d && typeof d.device_id === 'string')
+    .map((d) => ({ device_id: d.device_id, last_seen: d.last_seen || null }));
+  const now = new Date().toISOString();
+  const idx = list.findIndex((d) => d.device_id === deviceId);
+
+  if (idx >= 0) {
+    list[idx].last_seen = now;
+    return { allowed: true, devices: list };
+  }
+  if (isRevalidation) {
+    return { allowed: false, devices: list };
+  }
+  // New device activating: evict the oldest until there's room for one more.
+  list.sort((a, b) => String(a.last_seen).localeCompare(String(b.last_seen)));
+  while (list.length >= DEVICE_LIMIT) list.shift();
+  list.push({ device_id: deviceId, last_seen: now });
+  return { allowed: true, devices: list };
+}
+
+/** Persist the devices array on the profile row (service role; PATCH only). */
+async function saveDevices(email, devices) {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  await fetch(`${url}/rest/v1/profiles?email=eq.${encodeURIComponent(email)}`, {
+    method: 'PATCH',
+    headers: {
+      apikey: key,
+      authorization: `Bearer ${key}`,
+      'content-type': 'application/json',
+      prefer: 'return=minimal',
+    },
+    body: JSON.stringify({ devices }),
+  });
 }
 
 export default async function handler(req, res) {
@@ -130,6 +189,24 @@ export default async function handler(req, res) {
     const dbStatus = profile?.subscription_status || 'none';
     const status = basis === 'stripe' ? 'active' : dbStatus;
     if (!ACTIVE_STATUSES.has(status)) return res.status(200).json({ ...DENY });
+
+    // Device seat cap. Only enforced when we have a profile row to track against
+    // (i.e. the Stripe webhook + Supabase are configured); otherwise it fails
+    // open so an unconfigured/test deploy still activates. A 'token' basis is a
+    // background revalidation — an evicted device must NOT be silently re-admitted.
+    const deviceId = typeof body.device_id === 'string' ? body.device_id.trim() : '';
+    if (deviceId && profile) {
+      const isRevalidation = basis === 'token' || body.revalidate === true;
+      const gate = manageDevice(profile.devices, deviceId, isRevalidation);
+      if (!gate.allowed) return res.status(200).json({ ...DENY });
+      try {
+        await saveDevices(email, gate.devices);
+      } catch (err) {
+        // Persisting the seat is best-effort; never fail an otherwise-valid
+        // activation because the write hiccuped.
+        console.error('check-user: saveDevices failed', err);
+      }
+    }
 
     const payload = { active: true, subscription_status: status, email, tier: 'free' };
 

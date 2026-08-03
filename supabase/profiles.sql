@@ -33,6 +33,15 @@ create table if not exists public.profiles (
 alter table public.profiles add column if not exists current_period_end timestamptz;
 alter table public.profiles add column if not exists plan_interval text;
 
+-- Registered devices for the Pro seat cap. Each element is
+--   { "device_id": "device_…", "last_seen": "2026-08-03T12:00:00.000Z" }
+-- Written only by /api/check-user (service role): activation adds/refreshes a
+-- device (evicting the least-recently-seen when over the cap); background
+-- revalidation refreshes a known device and drops one that has been evicted.
+-- This is what stops one paid subscription from unlocking Pro on unlimited PCs
+-- or being shared as email + `sub_…` with everyone. See api/check-user.js.
+alter table public.profiles add column if not exists devices jsonb not null default '[]'::jsonb;
+
 -- Activation secret for MANUALLY GRANTED ('lifetime') accounts only.
 --
 -- Paying customers activate with their Stripe Subscription ID (`sub_…`), which
