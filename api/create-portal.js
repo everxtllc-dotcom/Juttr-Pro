@@ -24,6 +24,33 @@ import { authorizeCaller } from './_auth.js';
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
+/**
+ * The Stripe customer id the webhook recorded on the Supabase profile.
+ *
+ * We prefer this over resolving the customer by email: Stripe's
+ * `customers?email=` filter is CASE-SENSITIVE, so a customer stored as
+ * `Foo@x.com` is invisible to a lowercased lookup (the account activates fine —
+ * that path matches case-insensitively — but the billing portal 404s). The
+ * stored id has no such problem. Returns null if unavailable so the caller can
+ * fall back to the email search.
+ */
+async function customerIdFromProfile(email) {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) return null;
+  try {
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const r = await fetch(
+      `${process.env.SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(email)}` +
+        `&select=stripe_customer_id&limit=1`,
+      { headers: { apikey: key, authorization: `Bearer ${key}`, accept: 'application/json' } },
+    );
+    if (!r.ok) return null;
+    const rows = await r.json().catch(() => []);
+    return rows?.[0]?.stripe_customer_id || null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -63,20 +90,25 @@ export default async function handler(req, res) {
   const auth = { authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` };
 
   try {
-    // Resolve the Stripe customer by email (same lookup as check-user.js).
-    const custRes = await fetch(
-      `https://api.stripe.com/v1/customers?email=${encodeURIComponent(email)}&limit=1`,
-      { headers: auth },
-    );
-    const custData = await custRes.json().catch(() => ({}));
-    const customer = custData?.data?.[0];
-    if (!custRes.ok || !customer) {
+    // Prefer the customer id the webhook saved on the profile (case-independent).
+    // Only fall back to Stripe's case-sensitive email search when there's no
+    // profile id yet (e.g. before the webhook has run).
+    let customerId = await customerIdFromProfile(email);
+    if (!customerId) {
+      const custRes = await fetch(
+        `https://api.stripe.com/v1/customers?email=${encodeURIComponent(email)}&limit=1`,
+        { headers: auth },
+      );
+      const custData = await custRes.json().catch(() => ({}));
+      customerId = custData?.data?.[0]?.id || null;
+    }
+    if (!customerId) {
       return res.status(404).json({ error: 'no_customer' });
     }
 
     // Create the hosted billing portal session for that customer.
     const params = new URLSearchParams();
-    params.append('customer', customer.id);
+    params.append('customer', customerId);
     params.append('return_url', `${origin}/#pricing`);
 
     const portalRes = await fetch('https://api.stripe.com/v1/billing_portal/sessions', {

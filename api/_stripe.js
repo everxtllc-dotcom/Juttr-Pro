@@ -73,6 +73,27 @@ export async function resolveByEmail(email) {
 }
 
 /**
+ * Resolve a customer's active-or-trialing subscription from a known Stripe
+ * customer id. Used when the id is taken from the Supabase profile (written by
+ * the webhook) instead of an email search — Stripe's `customers?email=` filter is
+ * case-sensitive, so a mixed-case address stored at checkout is missed by our
+ * lowercased lookups. Resolving by id sidesteps that. Returns { ok, sub, customer }.
+ */
+export async function resolveByCustomerId(customerId) {
+  if (!customerId) return { error: 'no_customer', message: 'No customer found.' };
+
+  const customer = await stripeGet(`customers/${encodeURIComponent(customerId)}`);
+  if (!customer.ok || !customer.data?.id || customer.data?.deleted) {
+    return { error: 'no_customer', message: 'No customer found.' };
+  }
+  const subs = await stripeGet(`subscriptions?customer=${customerId}&status=all&limit=10`);
+  const sub = (subs.data?.data || []).find((s) => ACTIVE_STATUSES.has(s.status));
+  if (!sub) return { error: 'inactive', message: 'No active subscription.' };
+
+  return { ok: true, sub, customer: customer.data };
+}
+
+/**
  * Flatten a Stripe subscription into the safe, display-only fields the account
  * page / settings render. Never includes ids, payment methods, or other PII
  * beyond the account email the caller already proved they own.
