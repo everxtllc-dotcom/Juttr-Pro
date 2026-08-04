@@ -87,10 +87,11 @@ async function getProfile(email) {
 }
 
 // ── Device seat cap ─────────────────────────────────────────────────────────
-// How many devices one subscription may run Pro on at once. Generous enough for
-// a normal person (desktop + laptop + one more) but low enough that sharing the
-// email + `sub_…` with a crowd makes everyone fight over the slots.
-const DEVICE_LIMIT = 3;
+// How many devices one subscription may run Pro on at once. Each browser is a
+// separate install (separate chrome.storage → separate device_id), so this also
+// spans a person's several browsers; 5 leaves room for a couple of browsers plus
+// a second machine while still making crowd-sharing thrash over the slots.
+const DEVICE_LIMIT = 5;
 
 /**
  * Decide whether `deviceId` may hold a Pro seat, and return the devices list to

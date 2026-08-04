@@ -69,6 +69,14 @@
     <div class="account-box" id="result" hidden>
       <div class="detail-head"><span class="status-badge" id="statusBadge" hidden>Active</span></div>
       <p class="hero-sub" id="resultMsg" style="margin: 0;"></p>
+      <div class="key-box" id="keyBox" hidden>
+        <p class="key-label">Your activation key</p>
+        <div class="key-row">
+          <code id="keyValue"></code>
+          <button class="btn btn-accent btn-sm" id="copyKeyBtn" type="button">Copy</button>
+        </div>
+        <p class="key-hint">Paste this into Juttr → Settings → Subscription to unlock Pro.</p>
+      </div>
       <div class="hero-actions" style="justify-content: flex-start; margin-top: 20px;" id="resultActions"></div>
     </div>
   </div>
@@ -101,6 +109,21 @@
     border: 1px solid rgba(45, 212, 191, 0.28); border-radius: 999px; padding: 5px 12px;
     margin-bottom: 14px;
   }
+  .key-box {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 16px; margin-top: 18px; text-align: left;
+  }
+  .key-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--text-faint); margin: 0 0 10px;
+  }
+  .key-row { display: flex; align-items: center; gap: 10px; }
+  .key-row code {
+    flex: 1 1 auto; font-family: var(--mono); font-size: 13.5px; color: var(--teal-bright);
+    background: var(--teal-soft); padding: 10px 12px; border-radius: var(--radius-sm);
+    word-break: break-all; user-select: all;
+  }
+  .key-hint { font-size: 12.5px; color: var(--text-dim); margin: 12px 0 0; }
 </style>
 
 <script type="module">
@@ -115,6 +138,11 @@
 
   // Where verified users are sent. Point this at your app / dashboard URL.
   const DASHBOARD_URL = '/';
+
+  // Chrome Web Store listing — the "Add to Chrome" CTA, for buyers who paid before
+  // installing the extension. Same URL the marketing site uses (js/site.js).
+  const CHROME_STORE_URL =
+    'https://chromewebstore.google.com/detail/juttr/ekhlnpabcklhbbkilicfeiepcgdiklef';
 
   // Fallback when /api/create-portal fails. Reloading /account is harmless (the
   // user can retry) and avoids Stripe's error page. If you'd rather use Stripe's
@@ -134,6 +162,9 @@
   const badgeEl = document.getElementById('statusBadge');
   const resultMsg = document.getElementById('resultMsg');
   const resultActions = document.getElementById('resultActions');
+  const keyBox = document.getElementById('keyBox');
+  const keyValue = document.getElementById('keyValue');
+  const copyKeyBtn = document.getElementById('copyKeyBtn');
   const setPwForm = document.getElementById('setPwForm');
   const newPasswordEl = document.getElementById('newPassword');
   const setPwBtn = document.getElementById('setPwBtn');
@@ -184,12 +215,32 @@
   function continueBtn() {
     return '<a class="btn btn-accent btn-lg" href="' + DASHBOARD_URL + '">Continue to Juttr</a>';
   }
+  function installBtn() {
+    return '<a class="btn btn-ghost btn-lg" href="' + CHROME_STORE_URL +
+      '" target="_blank" rel="noopener">Add to Chrome — Free</a>';
+  }
+
+  // Show (or hide) the activation key — the Stripe Subscription ID the user pastes
+  // into the extension. Lets someone who lost their receipt recover it after login.
+  function renderKey(subId) {
+    if (!subId) { keyBox.hidden = true; return; }
+    keyValue.textContent = subId;
+    keyBox.hidden = false;
+    copyKeyBtn.onclick = async function () {
+      try {
+        await navigator.clipboard.writeText(subId);
+        copyKeyBtn.textContent = 'Copied!';
+        setTimeout(function () { copyKeyBtn.textContent = 'Copy'; }, 1800);
+      } catch (e) { /* clipboard blocked — the code is selectable to copy manually */ }
+    };
+  }
 
   // Active accounts. Lifetime never expires; Stripe plans (active/trialing) show
   // the interval + how much time is left in the current period, fetched live from
   // Stripe via /api/subscription-status.
   async function showActive(status, email) {
     resultEl.hidden = false;
+    keyBox.hidden = true;
     badgeEl.hidden = false;
     badgeEl.textContent =
       status === 'trialing' ? 'Trial' :
@@ -197,13 +248,16 @@
     resultActions.innerHTML = '';
 
     if (status === 'lifetime') {
+      // Lifetime grants have no Stripe subscription id — their key was issued
+      // manually, so there's nothing to show or bill here.
       resultMsg.textContent = 'Lifetime access — your Pro plan never expires.';
-      resultActions.innerHTML = continueBtn();
+      resultActions.innerHTML = continueBtn() + installBtn();
       return;
     }
 
     resultMsg.textContent = 'Loading your plan details…';
     let msg = 'Your Juttr Pro subscription is active.';
+    let subId = '';
     try {
       const r = await fetch('/api/subscription-status', {
         method: 'POST',
@@ -211,6 +265,7 @@
         body: JSON.stringify({ email: email, access_token: await sessionToken() }),
       });
       const d = await r.json().catch(() => ({}));
+      if (r.ok && d.subscription_id) subId = d.subscription_id;
       if (r.ok && d.current_period_end) {
         const interval = d.plan && d.plan.interval;               // 'month' | 'year'
         const period = interval === 'year' ? 'yearly' : interval === 'month' ? 'monthly' : 'Pro';
@@ -222,8 +277,9 @@
     } catch (e) { /* keep the generic active message */ }
 
     resultMsg.textContent = msg;
+    renderKey(subId);
     resultActions.innerHTML =
-      continueBtn() +
+      continueBtn() + installBtn() +
       '<button class="btn btn-ghost btn-lg" id="portalBtn2" type="button">Manage billing</button>';
     const pb = document.getElementById('portalBtn2');
     if (pb) pb.addEventListener('click', function () { openPortal(email); });
@@ -232,12 +288,14 @@
   // Logged in, but no Pro (the default 'free' plan, or a lapsed subscription).
   function showInactive(email, status) {
     resultEl.hidden = false;
+    keyBox.hidden = true;
     badgeEl.hidden = true;
     resultMsg.textContent = (!status || status === 'free' || status === 'none')
       ? 'You’re logged in on the free plan. Upgrade to unlock Juttr Pro.'
       : 'You’re logged in, but your subscription isn’t active. Renew to restore Pro.';
     resultActions.innerHTML =
       '<a class="btn btn-accent btn-lg" href="/#pricing">Upgrade to Pro</a>' +
+      installBtn() +
       '<button class="btn btn-ghost btn-lg" id="portalBtn" type="button">Manage billing</button>';
     document.getElementById('portalBtn').addEventListener('click', function () {
       openPortal(email);

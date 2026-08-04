@@ -101,7 +101,13 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'no_customer' });
     }
 
-    return res.status(200).json(toStatusPayload(result.sub, result.customer));
+    // The caller proved account control (authorizeCaller above), so return the
+    // Subscription ID too — it's the activation key the account page shows for
+    // recovery. toStatusPayload deliberately omits ids, so add it here only.
+    return res.status(200).json({
+      ...toStatusPayload(result.sub, result.customer),
+      subscription_id: result.sub.id,
+    });
   } catch (err) {
     console.error('subscription-status error:', err);
     return res.status(502).json({ error: 'lookup_failed' });
