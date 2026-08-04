@@ -14,15 +14,17 @@
   actual configuration in Supabase, Brevo, Stripe and Vercel — a stated
   period you do not honour is itself a compliance failure.
 
-  §3 DESCRIBES A MINIMAL-COLLECTION MODEL THAT THE CODE NOW MATCHES:
-    • the lead-capture modal and its name field were deleted from index.html
-    • api/subscribe.js (which wrote { name, email, source, opt_in } to the
-      Supabase `subscribers` table) was deleted outright
-    • api/send-install-link.js replaced it and stores NOTHING
-    • store CTAs are plain links; nothing is collected before the store
-  If anyone re-adds collection — a mailing list, a name field, analytics,
-  campaign attribution — §3 MUST be updated in the same change, or this
-  page becomes a false statement.
+  §3 NOW DESCRIBES AN OPTIONAL-ACCOUNT MODEL WITH OPT-IN MARKETING:
+    • Free use still needs NO account — store CTAs remain plain links, and
+      nothing is collected before the store.
+    • An OPTIONAL free account (Supabase) stores the user's email; sign-in is
+      email+password or Google (OAuth).
+    • Sign-up shows an UNTICKED "email me updates" box. Only when ticked is
+      profiles.marketing_opt_in set (with marketing_opt_in_at). That is the
+      marketing list — consent-based, and unsubscribe must be honoured.
+  If the collection model changes again — a name field, analytics, campaign
+  attribution, or making the account mandatory — §3 MUST be updated in the same
+  change, or this page becomes a false statement.
 
   This page carries <meta name="robots" content="noindex, nofollow"> and is
   excluded from sitemap.xml. Every page of the preview carries the same tag —
@@ -66,7 +68,7 @@
     <p class="jx-legal-updated">Effective 26 July 2026 · Website, browser extension, accounts, subscriptions and support</p>
 
     <div class="jx-legal-lede">
-      <p><strong>The short version.</strong> Your workspace stays local — tasks, notes, boards, calendar data and files live on your device and in a local folder you control. The only personal information we hold is the email address for your account, plus a subscription record if you buy Pro. There is no mailing list and no tracking. The sections below explain exactly which is which.</p>
+      <p><strong>The short version.</strong> Your workspace stays local — tasks, notes, boards, calendar data and files live on your device and in a local folder you control. Using Juttr free needs no account. If you choose to create a free account, we hold your email (and a subscription record if you buy Pro). We only send marketing email to people who tick the optional opt-in box, and you can unsubscribe at any time. There is no ad tracking. The sections below explain exactly which is which.</p>
     </div>
 
     <ul class="jx-legal-toc">
@@ -101,11 +103,12 @@
 
     <h2 id="what-we-collect">3. Information we collect</h2>
 
-    <p>Juttr deliberately collects as little as possible. <strong>The only personal information we hold about you is the email address for your Juttr account, and the subscription record that goes with it if you buy Pro.</strong> We do not run a mailing list, we do not ask for your name, and we do not track which page or advert brought you here.</p>
+    <p>Juttr deliberately collects as little as possible. <strong>Using Juttr free requires no account.</strong> If you create an optional account, we hold your email address; if you buy Pro, we also hold a subscription record. We do not ask for your name, and we do not track which page or advert brought you here. We keep a marketing list only of people who explicitly opt in.</p>
 
     <h3>3.1 Information you provide</h3>
     <ul>
-      <li><strong>Account information</strong> — your email address, used to create and sign in to your Juttr account. Passwords are handled by our authentication provider and are not visible to Juttr in plain text.</li>
+      <li><strong>Account information (optional)</strong> — if you create a Juttr account, your email address, used to sign in and manage your subscription. You can sign in with an email and password or with Google (in which case Google confirms your email address to us). Passwords are handled by our authentication provider and are not visible to Juttr in plain text.</li>
+      <li><strong>Marketing opt-in (optional)</strong> — if, at sign-up, you tick the "email me updates" box, we record that consent (and when you gave it) so we can send occasional product updates. The box is unticked by default; you can withdraw consent and unsubscribe at any time.</li>
       <li><strong>Subscription information</strong> — if you buy Pro: your plan, subscription status, renewal date, Stripe customer or subscription identifier, and payment status. This exists so we can verify that your subscription is active.</li>
       <li><strong>Support information</strong> — anything you choose to put in an email to us.</li>
     </ul>
@@ -121,21 +124,23 @@
       <li>Local browser storage used to remember your preferences and keep you signed in. This stays in your browser.</li>
     </ul>
 
-    <p><strong>What we do not do.</strong> Juttr has no marketing mailing list, no advertising trackers, no analytics tracking of visitors, and no signup-source or campaign attribution. We do not sell or share personal information for advertising. If any of this changes, we will update this Policy — and put any consent controls the law requires in place — <em>before</em> that collection begins.</p>
+    <p><strong>What we do not do.</strong> Juttr has no advertising trackers, no analytics tracking of visitors, and no signup-source or campaign attribution. Our only marketing email is opt-in — we never add you to it without the consent box, and we do not ask for your name. We do not sell or share personal information for advertising. If any of this changes, we will update this Policy — and put any consent controls the law requires in place — <em>before</em> that collection begins.</p>
 
     <h2 id="how-we-use">4. How we use information</h2>
     <ul>
       <li>Create and authenticate your account, and send password-reset messages.</li>
       <li>Verify that a Pro subscription is active, and process purchases, renewals, cancellations, refunds and receipts.</li>
       <li>Send an installation link or other message that you specifically asked for.</li>
+      <li>Send occasional product-update emails <strong>only if you opted in</strong>, until you unsubscribe.</li>
       <li>Respond to support requests and communicate important service, security, or policy notices.</li>
       <li>Keep the service secure, prevent fraud and abuse, enforce our <a href="/terms">Terms</a>, and comply with legal obligations.</li>
     </ul>
-    <p>We do not use your information for marketing, profiling, advertising, or automated decision-making.</p>
+    <p>We do not use your information for profiling, advertising, or automated decision-making, and we send marketing email only to people who opted in.</p>
 
     <h2 id="legal-bases">5. Legal bases where GDPR or similar law applies</h2>
     <ul>
       <li><strong>Contract:</strong> processing needed to provide your account, paid subscription, billing, and anything else you specifically request.</li>
+      <li><strong>Consent:</strong> sending you marketing/product-update email, based on the opt-in box you ticked. You may withdraw consent at any time, without affecting your account or subscription.</li>
       <li><strong>Legitimate interests:</strong> keeping the service secure and operational, preventing abuse, and responding to support, where those interests are not overridden by your rights.</li>
       <li><strong>Legal obligation:</strong> tax, accounting, consumer protection, fraud prevention, and lawful authority requests.</li>
     </ul>
@@ -144,10 +149,10 @@
     <p>We use service providers to operate specific parts of Juttr. They may process limited personal information on our behalf or as independent controllers under their own terms.</p>
     <ul>
       <li><strong>Vercel</strong> — website hosting, serverless functions, delivery, and operational logs.</li>
-      <li><strong>Supabase</strong> — account authentication and storage of your account record (email and subscription status).</li>
+      <li><strong>Supabase</strong> — account authentication and storage of your account record (email, subscription status, and marketing opt-in flag).</li>
       <li><strong>Stripe</strong> — checkout, payment processing, subscription management, receipts, fraud prevention, and billing portals. Juttr does not store complete payment-card details.</li>
-      <li><strong>Brevo</strong> — delivery of transactional email only: requested installation links, account and password messages. We do not use it for marketing campaigns.</li>
-      <li><strong>Google / Chrome Web Store</strong> and other browser stores — extension distribution and store account interactions.</li>
+      <li><strong>Brevo</strong> — email delivery: account and password messages, requested installation links, and — only if you opted in — product-update email.</li>
+      <li><strong>Google</strong> — optional "Sign in with Google" (Google confirms your email to us) and, via the Chrome Web Store and other browser stores, extension distribution and store account interactions.</li>
     </ul>
     <p>We may also disclose information when required by law, to protect rights and safety, in connection with a business reorganization or sale, or with your direction or consent. We do not sell your personal information.</p>
 
@@ -158,6 +163,7 @@
     <p>We retain personal information only for as long as reasonably necessary for the purposes described in this Policy, including legal, accounting, security, and dispute-resolution needs.</p>
     <ul>
       <li><strong>Account and subscription records:</strong> while the account or subscription is active and for a reasonable period afterward.</li>
+      <li><strong>Marketing opt-in:</strong> kept until you unsubscribe or withdraw consent, after which we stop sending and remove you from the list.</li>
       <li><strong>Install-link requests:</strong> not retained by Juttr. Our email provider keeps its own short-term delivery log.</li>
       <li><strong>Payment and tax records:</strong> for the period required by applicable accounting and tax law.</li>
       <li><strong>Operational logs:</strong> normally 30 to 90 days unless needed longer for security or legal reasons.</li>
@@ -168,6 +174,7 @@
     <ul>
       <li>Request access to, correction of, deletion of, or a copy of personal information, subject to applicable law.</li>
       <li>Delete your account, and with it the email address and subscription record we hold — email <a href="mailto:info@juttr.cc">info@juttr.cc</a>.</li>
+      <li>Unsubscribe from product-update email at any time — use the unsubscribe link in any such message, or email us — without affecting your account or subscription.</li>
       <li>Object to or request restriction of certain processing where applicable.</li>
       <li>Complain to the relevant data-protection authority where applicable.</li>
       <li>Delete local workspace data by using Juttr's controls or removing the selected local files, subject to your own backups.</li>

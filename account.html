@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Log in — Juttr</title>
+  <title>Account — Juttr</title>
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#0f1117" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
@@ -22,37 +22,68 @@
 <section class="hero" style="min-height: 100vh; justify-content: center; padding-top: 120px;">
   <div class="hero-glow"></div>
   <div class="hero-inner" style="max-width: 560px;">
-    <h1 class="hero-title" style="font-size: clamp(30px, 5vw, 46px);">Log in</h1>
-    <p class="hero-sub" style="margin-bottom: 28px;">
-      Sign in with your Juttr account email and password to check your subscription.
+    <h1 class="hero-title" id="pageTitle" style="font-size: clamp(30px, 5vw, 46px);">Your Juttr account</h1>
+    <p class="hero-sub" id="pageSub" style="margin-bottom: 28px;">
+      A free account is optional — it lets you save your license key, grab the handbook, and manage Pro.
+      You can always just install the extension without one.
     </p>
 
-    <!-- Email + password login (Supabase Auth) -->
-    <form class="account-box" id="loginForm">
-      <div class="field">
-        <label for="email">Email address</label>
-        <input id="email" name="email" type="email" placeholder="you@example.com"
-               autocomplete="email" required />
-      </div>
-      <div class="field">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" placeholder="••••••••"
-               autocomplete="current-password" required />
-      </div>
-      <button class="btn btn-accent btn-lg" id="loginBtn" type="submit" style="width: 100%;">
-        Log in
+    <!-- ── Auth card: Google + email/password login or sign-up ─────────────── -->
+    <div class="account-box" id="authCard">
+      <button class="btn btn-ghost btn-lg gbtn" id="googleBtn" type="button" style="width: 100%;">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.5-1.7 4.4-5.5 4.4-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.7 3.4 14.6 2.4 12 2.4 6.9 2.4 2.8 6.5 2.8 11.6S6.9 20.8 12 20.8c5.9 0 9.8-4.1 9.8-9.9 0-.7-.1-1.2-.2-1.7H12z"/></svg>
+        Continue with Google
       </button>
-      <p class="account-error" id="error" hidden></p>
-    </form>
 
-    <p class="hero-sub" style="font-size: 13.5px; margin-top: 18px;">
-      No account yet? <a href="/#pricing">Get Juttr Pro</a> — your account is created at checkout.
-    </p>
-    <p class="hero-sub" style="font-size: 13px; margin-top: 10px;">
-      <a href="#" id="resetLink">Set or reset your password</a>
+      <div class="or"><span>or</span></div>
+
+      <!-- Login (default) -->
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com"
+                 autocomplete="email" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="••••••••"
+                 autocomplete="current-password" required />
+        </div>
+        <button class="btn btn-accent btn-lg" id="loginBtn" type="submit" style="width: 100%;">Log in</button>
+        <p class="account-error" id="error" hidden></p>
+      </form>
+
+      <!-- Sign up -->
+      <form id="signupForm" hidden>
+        <div class="field">
+          <label for="suEmail">Email address</label>
+          <input id="suEmail" type="email" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+        <div class="field">
+          <label for="suPassword">Choose a password</label>
+          <input id="suPassword" type="password" placeholder="At least 8 characters"
+                 autocomplete="new-password" minlength="8" required />
+        </div>
+        <label class="check">
+          <input type="checkbox" id="optIn" />
+          <span>Email me occasional Juttr updates. Unsubscribe anytime — optional.</span>
+        </label>
+        <button class="btn btn-accent btn-lg" id="signupBtn" type="submit" style="width: 100%;">Create free account</button>
+        <p class="account-error" id="suError" hidden></p>
+      </form>
+
+      <p class="switch">
+        <span id="toSignupLine">New to Juttr? <a href="#" id="toSignup">Create a free account</a></span>
+        <span id="toLoginLine" hidden>Have an account? <a href="#" id="toLogin">Log in</a></span>
+      </p>
+      <p class="switch"><a href="#" id="resetLink">Forgot your password?</a></p>
+    </div>
+
+    <p class="hero-sub" id="skipLine" style="font-size: 13px; margin-top: 16px;" hidden>
+      <a href="#" id="skipInstall">Skip — just install the extension →</a>
     </p>
 
-    <!-- Set password (shown when arriving from a "set your password" email link) -->
+    <!-- Set password (arriving from a reset / set-password email link) -->
     <form class="account-box" id="setPwForm" hidden>
       <div class="field">
         <label for="newPassword">Choose a password</label>
@@ -65,7 +96,7 @@
       <p class="account-error" id="setPwError" hidden></p>
     </form>
 
-    <!-- Result (shown after a successful login) -->
+    <!-- ── Member hub (after sign-in) ──────────────────────────────────────── -->
     <div class="account-box" id="result" hidden>
       <div class="detail-head"><span class="status-badge" id="statusBadge" hidden>Active</span></div>
       <p class="hero-sub" id="resultMsg" style="margin: 0;"></p>
@@ -78,6 +109,7 @@
         <p class="key-hint">Paste this into Juttr → Settings → Subscription to unlock Pro.</p>
       </div>
       <div class="hero-actions" style="justify-content: flex-start; margin-top: 20px;" id="resultActions"></div>
+      <p class="hub-signout" style="margin-top: 18px;"><a href="#" id="signOutLink">Sign out</a></p>
     </div>
   </div>
 </section>
@@ -102,6 +134,20 @@
   }
   .field input:focus { border-color: var(--teal); }
   .account-error { margin: 12px 0 0; font-size: 13px; color: #fb7185; }
+  .gbtn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+  .or {
+    display: flex; align-items: center; gap: 12px; margin: 18px 0; color: var(--text-faint);
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+  .check {
+    display: flex; gap: 10px; align-items: flex-start; margin: 4px 0 16px;
+    font-size: 13px; color: var(--text-dim); cursor: pointer; line-height: 1.4;
+  }
+  .check input { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--teal); flex: 0 0 auto; }
+  .switch { margin: 14px 0 0; font-size: 13px; color: var(--text-dim); }
+  .switch a { color: var(--teal); }
+  .hub-signout { font-size: 13px; } .hub-signout a { color: var(--text-dim); }
   .detail-head:empty { display: none; }
   .status-badge {
     display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
@@ -131,33 +177,46 @@
 
   // ── Public Supabase config (safe to expose in the browser) ──────────────────
   // The anon key is designed to be public; Row Level Security protects your data.
-  // Replace both with your project's values (Dashboard → Project Settings → API).
-  // The SERVICE ROLE key must NEVER appear here — it stays server-side only.
   const SUPABASE_URL = 'https://ctypqmdlwlssgilusdsf.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0eXBxbWRsd2xzc2dpbHVzZHNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxNzgyOTAsImV4cCI6MjA5ODc1NDI5MH0.rf3HzwknqJTA-Zv_vnsA8dpRxqaXQV1ThXg8edBWe5A';
 
-  // Where verified users are sent. Point this at your app / dashboard URL.
   const DASHBOARD_URL = '/';
-
-  // Chrome Web Store listing — the "Add to Chrome" CTA, for buyers who paid before
-  // installing the extension. Same URL the marketing site uses (js/site.js).
   const CHROME_STORE_URL =
     'https://chromewebstore.google.com/detail/juttr/ekhlnpabcklhbbkilicfeiepcgdiklef';
-
-  // Fallback when /api/create-portal fails. Reloading /account is harmless (the
-  // user can retry) and avoids Stripe's error page. If you'd rather use Stripe's
-  // hosted email-login page, set this to your Customer Portal login link from the
-  // Stripe Dashboard (Settings → Billing → Customer portal → Login link),
-  // e.g. 'https://billing.stripe.com/p/login/xxxxxxxx'. The bare
-  // 'https://billing.stripe.com/p/login' is NOT valid and Stripe rejects it.
+  const HANDBOOK_URL = 'assets/Juttr-Handbook.pdf';
   const GENERIC_PORTAL = '/account';
+
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const form = document.getElementById('loginForm');
+  // Optional continuation: an "Add to Chrome" / "Get Pro" CTA can send the visitor
+  // here first with ?next=install|checkout(&plan=). After auth we resume it.
+  const params = new URLSearchParams(location.search);
+  const nextAction = params.get('next');            // 'install' | 'checkout' | null
+  const nextPlan = params.get('plan') === 'yearly' ? 'yearly' : 'monthly';
+
+  // Elements
+  const pageTitle = document.getElementById('pageTitle');
+  const pageSub = document.getElementById('pageSub');
+  const authCard = document.getElementById('authCard');
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
   const emailEl = document.getElementById('email');
   const passwordEl = document.getElementById('password');
-  const btn = document.getElementById('loginBtn');
+  const loginBtn = document.getElementById('loginBtn');
   const errorEl = document.getElementById('error');
+  const suEmail = document.getElementById('suEmail');
+  const suPassword = document.getElementById('suPassword');
+  const optIn = document.getElementById('optIn');
+  const signupBtn = document.getElementById('signupBtn');
+  const suError = document.getElementById('suError');
+  const toSignup = document.getElementById('toSignup');
+  const toLogin = document.getElementById('toLogin');
+  const toSignupLine = document.getElementById('toSignupLine');
+  const toLoginLine = document.getElementById('toLoginLine');
+  const resetLink = document.getElementById('resetLink');
+  const skipLine = document.getElementById('skipLine');
+  const skipInstall = document.getElementById('skipInstall');
+  const googleBtn = document.getElementById('googleBtn');
   const resultEl = document.getElementById('result');
   const badgeEl = document.getElementById('statusBadge');
   const resultMsg = document.getElementById('resultMsg');
@@ -165,63 +224,81 @@
   const keyBox = document.getElementById('keyBox');
   const keyValue = document.getElementById('keyValue');
   const copyKeyBtn = document.getElementById('copyKeyBtn');
+  const signOutLink = document.getElementById('signOutLink');
   const setPwForm = document.getElementById('setPwForm');
   const newPasswordEl = document.getElementById('newPassword');
   const setPwBtn = document.getElementById('setPwBtn');
   const setPwError = document.getElementById('setPwError');
-  const resetLink = document.getElementById('resetLink');
 
-  // Prefill the email if a Supabase session is already stored on this device.
-  supabase.auth.getSession().then(({ data }) => {
-    if (data && data.session && data.session.user && !emailEl.value) {
-      emailEl.value = data.session.user.email || '';
-    }
+  // When we arrived from an install nudge, offer a no-account way through.
+  if (nextAction === 'install') { skipLine.hidden = false; }
+  skipInstall.addEventListener('click', function (e) {
+    e.preventDefault(); window.location.href = CHROME_STORE_URL;
   });
 
-  function showError(msg) { errorEl.textContent = msg; errorEl.hidden = false; }
-  function setBusy(b) { btn.disabled = b; btn.textContent = b ? 'Signing in…' : 'Log in'; }
+  function showError(el, msg) { el.textContent = msg; el.hidden = false; }
+  function hideAuth() { authCard.hidden = true; skipLine.hidden = true; }
 
-  // The billing endpoints require proof that the caller controls the account —
-  // an email alone is not a credential. Here that proof is the login session.
+  // ── Login / sign-up mode toggle ─────────────────────────────────────────────
+  function setMode(mode) {
+    const signup = mode === 'signup';
+    loginForm.hidden = signup;
+    signupForm.hidden = !signup;
+    toSignupLine.hidden = signup;
+    toLoginLine.hidden = !signup;
+    errorEl.hidden = true; suError.hidden = true;
+  }
+  toSignup.addEventListener('click', (e) => { e.preventDefault(); setMode('signup'); });
+  toLogin.addEventListener('click', (e) => { e.preventDefault(); setMode('login'); });
+
+  // ── Session helpers ─────────────────────────────────────────────────────────
   async function sessionToken() {
+    try { const s = await supabase.auth.getSession(); return s.data?.session?.access_token || ''; }
+    catch (e) { return ''; }
+  }
+
+  async function startCheckout(plan, email) {
     try {
-      const s = await supabase.auth.getSession();
-      return s.data?.session?.access_token || '';
-    } catch (e) { return ''; }
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, email }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (d.url) { window.location.href = d.url; return; }
+    } catch (e) { /* fall through */ }
+    showError(errorEl, 'Could not start checkout. Please try again.');
   }
 
   async function openPortal(email) {
     try {
       const r = await fetch('/api/create-portal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email, access_token: await sessionToken() }),
       });
       const d = await r.json().catch(() => ({}));
       window.location.href = (r.ok && d.url) ? d.url : GENERIC_PORTAL;
-    } catch (e) {
-      window.location.href = GENERIC_PORTAL;
-    }
+    } catch (e) { window.location.href = GENERIC_PORTAL; }
   }
 
   function fmtDate(unix) {
-    return new Date(unix * 1000).toLocaleDateString(undefined, {
-      year: 'numeric', month: 'long', day: 'numeric',
-    });
+    return new Date(unix * 1000).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
   }
-  function daysLeft(unix) {
-    return Math.max(0, Math.ceil((unix * 1000 - Date.now()) / 86400000));
-  }
-  function continueBtn() {
-    return '<a class="btn btn-accent btn-lg" href="' + DASHBOARD_URL + '">Continue to Juttr</a>';
-  }
+  function daysLeft(unix) { return Math.max(0, Math.ceil((unix * 1000 - Date.now()) / 86400000)); }
+
+  // ── Hub buttons ─────────────────────────────────────────────────────────────
   function installBtn() {
-    return '<a class="btn btn-ghost btn-lg" href="' + CHROME_STORE_URL +
+    return '<a class="btn btn-accent btn-lg" href="' + CHROME_STORE_URL +
       '" target="_blank" rel="noopener">Add to Chrome — Free</a>';
   }
+  function handbookBtn() {
+    return '<a class="btn btn-ghost btn-lg" href="' + HANDBOOK_URL +
+      '" download>Download the Handbook</a>';
+  }
+  function upgradeBtns() {
+    return '<button class="btn btn-accent btn-lg" data-plan="yearly" type="button">Get Pro — $24 first year</button>' +
+      '<button class="btn btn-outline" data-plan="monthly" type="button">Monthly — $3/mo</button>';
+  }
 
-  // Show (or hide) the activation key — the Stripe Subscription ID the user pastes
-  // into the extension. Lets someone who lost their receipt recover it after login.
   function renderKey(subId) {
     if (!subId) { keyBox.hidden = true; return; }
     keyValue.textContent = subId;
@@ -231,27 +308,25 @@
         await navigator.clipboard.writeText(subId);
         copyKeyBtn.textContent = 'Copied!';
         setTimeout(function () { copyKeyBtn.textContent = 'Copy'; }, 1800);
-      } catch (e) { /* clipboard blocked — the code is selectable to copy manually */ }
+      } catch (e) { /* clipboard blocked — the code is selectable */ }
     };
   }
 
-  // Active accounts. Lifetime never expires; Stripe plans (active/trialing) show
-  // the interval + how much time is left in the current period, fetched live from
-  // Stripe via /api/subscription-status.
+  function wireCheckoutButtons(email) {
+    resultActions.querySelectorAll('[data-plan]').forEach(function (b) {
+      b.addEventListener('click', function () { startCheckout(b.getAttribute('data-plan'), email); });
+    });
+  }
+
+  // Pro / lifetime member.
   async function showActive(status, email) {
-    resultEl.hidden = false;
-    keyBox.hidden = true;
-    badgeEl.hidden = false;
-    badgeEl.textContent =
-      status === 'trialing' ? 'Trial' :
-      status === 'lifetime' ? 'Lifetime' : 'Active';
+    resultEl.hidden = false; keyBox.hidden = true; badgeEl.hidden = false;
+    badgeEl.textContent = status === 'trialing' ? 'Trial' : status === 'lifetime' ? 'Lifetime' : 'Active';
     resultActions.innerHTML = '';
 
     if (status === 'lifetime') {
-      // Lifetime grants have no Stripe subscription id — their key was issued
-      // manually, so there's nothing to show or bill here.
       resultMsg.textContent = 'Lifetime access — your Pro plan never expires.';
-      resultActions.innerHTML = continueBtn() + installBtn();
+      resultActions.innerHTML = installBtn() + handbookBtn();
       return;
     }
 
@@ -260,144 +335,159 @@
     let subId = '';
     try {
       const r = await fetch('/api/subscription-status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email, access_token: await sessionToken() }),
       });
       const d = await r.json().catch(() => ({}));
       if (r.ok && d.subscription_id) subId = d.subscription_id;
       if (r.ok && d.current_period_end) {
-        const interval = d.plan && d.plan.interval;               // 'month' | 'year'
+        const interval = d.plan && d.plan.interval;
         const period = interval === 'year' ? 'yearly' : interval === 'month' ? 'monthly' : 'Pro';
         const left = daysLeft(d.current_period_end);
         msg = 'Juttr Pro (' + period + ') — ' +
           (d.cancel_at_period_end ? 'expires' : 'renews') + ' on ' + fmtDate(d.current_period_end) +
           ' · ' + left + ' day' + (left === 1 ? '' : 's') + ' left.';
       }
-    } catch (e) { /* keep the generic active message */ }
+    } catch (e) { /* keep generic */ }
 
     resultMsg.textContent = msg;
     renderKey(subId);
     resultActions.innerHTML =
-      continueBtn() + installBtn() +
-      '<button class="btn btn-ghost btn-lg" id="portalBtn2" type="button">Manage billing</button>';
+      installBtn() + handbookBtn() +
+      '<button class="btn btn-ghost btn-lg" id="portalBtn2" type="button">Manage subscription</button>';
     const pb = document.getElementById('portalBtn2');
     if (pb) pb.addEventListener('click', function () { openPortal(email); });
   }
 
-  // Logged in, but no Pro (the default 'free' plan, or a lapsed subscription).
+  // Signed in, no Pro (free plan or lapsed).
   function showInactive(email, status) {
-    resultEl.hidden = false;
-    keyBox.hidden = true;
-    badgeEl.hidden = true;
+    resultEl.hidden = false; keyBox.hidden = true; badgeEl.hidden = true;
     resultMsg.textContent = (!status || status === 'free' || status === 'none')
-      ? 'You’re logged in on the free plan. Upgrade to unlock Juttr Pro.'
-      : 'You’re logged in, but your subscription isn’t active. Renew to restore Pro.';
-    resultActions.innerHTML =
-      '<a class="btn btn-accent btn-lg" href="/#pricing">Upgrade to Pro</a>' +
-      installBtn() +
+      ? 'You’re signed in on the free plan. Install Juttr, grab the handbook, or upgrade to Pro.'
+      : 'You’re signed in, but your subscription isn’t active. Renew to restore Pro.';
+    resultActions.innerHTML = installBtn() + handbookBtn() + upgradeBtns() +
       '<button class="btn btn-ghost btn-lg" id="portalBtn" type="button">Manage billing</button>';
-    document.getElementById('portalBtn').addEventListener('click', function () {
-      openPortal(email);
-    });
+    wireCheckoutButtons(email);
+    document.getElementById('portalBtn').addEventListener('click', function () { openPortal(email); });
   }
 
-  // Verify subscription status server-side and render the result. Shared by the
-  // login flow and the set-password (auto-provisioned account) flow.
+  // Verify subscription status and render the hub. Then resume any pending action.
   async function verifyAndShow(email) {
+    hideAuth();
+    setPwForm.hidden = true;
     try {
-      // /api/check-user requires proof of possession — an email alone no longer
-      // returns a licence. Here that proof is the session we just established.
-      const sess = await supabase.auth.getSession();
-      const accessToken = sess.data?.session?.access_token || '';
       const res = await fetch('/api/check-user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, access_token: accessToken }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, access_token: await sessionToken() }),
       });
       const info = await res.json().catch(() => ({}));
-      if (res.ok && info.active) {
-        // Show details (incl. time left) with a manual "Continue" button.
-        showActive(info.subscription_status, email);
-      } else {
-        showInactive(email, info.subscription_status);
-      }
+      if (res.ok && info.active) showActive(info.subscription_status, email);
+      else showInactive(email, info.subscription_status);
     } catch (err) {
-      showError('Could not verify your subscription. Please try again.');
+      showInactive(email, 'free');
     }
+    if (nextAction === 'checkout') startCheckout(nextPlan, email);
   }
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    errorEl.hidden = true;
-    resultEl.hidden = true;
+  // ── Google OAuth ────────────────────────────────────────────────────────────
+  googleBtn.addEventListener('click', async function () {
+    googleBtn.disabled = true;
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      // Carry ?next through the redirect so we resume after returning.
+      options: { redirectTo: window.location.origin + '/account' + window.location.search },
+    });
+  });
 
+  // ── Login ───────────────────────────────────────────────────────────────────
+  loginForm.addEventListener('submit', async function (e) {
+    e.preventDefault(); errorEl.hidden = true;
     const email = emailEl.value.trim().toLowerCase();
     const password = passwordEl.value;
     if (!email || !password) return;
-
-    setBusy(true);
-    const auth = await supabase.auth.signInWithPassword({ email: email, password: password });
-    if (auth.error) {
-      setBusy(false);
-      showError(auth.error.message || 'Incorrect email or password.');
-      return;
-    }
-    setBusy(false);
+    loginBtn.disabled = true; loginBtn.textContent = 'Signing in…';
+    const auth = await supabase.auth.signInWithPassword({ email, password });
+    loginBtn.disabled = false; loginBtn.textContent = 'Log in';
+    if (auth.error) { showError(errorEl, auth.error.message || 'Incorrect email or password.'); return; }
     await verifyAndShow(email);
   });
 
-  // Arriving from a "set your password" email link: Supabase parses the token
-  // from the URL and fires PASSWORD_RECOVERY. Reveal the set-password form.
-  supabase.auth.onAuthStateChange(function (event) {
-    if (event === 'PASSWORD_RECOVERY') {
-      form.hidden = true;
-      resultEl.hidden = true;
-      errorEl.hidden = true;
-      setPwForm.hidden = false;
+  // ── Sign up (free account + optional marketing consent) ─────────────────────
+  signupForm.addEventListener('submit', async function (e) {
+    e.preventDefault(); suError.hidden = true;
+    const email = suEmail.value.trim().toLowerCase();
+    const password = suPassword.value;
+    if (!email || password.length < 8) { showError(suError, 'Use a valid email and an 8+ character password.'); return; }
+    signupBtn.disabled = true; signupBtn.textContent = 'Creating…';
+    const { data, error } = await supabase.auth.signUp({
+      email, password,
+      options: {
+        data: { marketing_opt_in: optIn.checked },
+        emailRedirectTo: window.location.origin + '/account' + window.location.search,
+      },
+    });
+    signupBtn.disabled = false; signupBtn.textContent = 'Create free account';
+    if (error) { showError(suError, error.message || 'Could not create your account.'); return; }
+    if (data && data.session) {
+      // Email confirmation is off → we're signed in immediately.
+      await verifyAndShow(email);
+    } else {
+      // Confirmation on → no session yet. Tell them to confirm.
+      hideAuth();
+      resultEl.hidden = false; badgeEl.hidden = true; keyBox.hidden = true;
+      resultMsg.textContent = 'Almost there — check your email to confirm your account, then come back to sign in.';
+      resultActions.innerHTML = '';
+      document.querySelector('.hub-signout').hidden = true;
     }
   });
 
-  setPwForm.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    setPwError.hidden = true;
-    const pw = newPasswordEl.value;
-    if (!pw || pw.length < 8) {
-      setPwError.textContent = 'Use at least 8 characters.';
-      setPwError.hidden = false;
-      return;
-    }
-    setPwBtn.disabled = true;
-    setPwBtn.textContent = 'Saving…';
-    const upd = await supabase.auth.updateUser({ password: pw });
-    if (upd.error) {
-      setPwBtn.disabled = false;
-      setPwBtn.textContent = 'Set password & continue';
-      setPwError.textContent = upd.error.message || 'Could not set your password.';
-      setPwError.hidden = false;
-      return;
-    }
-    // Now authenticated — verify the subscription and show the result.
-    const who = await supabase.auth.getUser();
-    const email = ((who.data && who.data.user && who.data.user.email) || '').toLowerCase();
-    setPwForm.hidden = true;
-    await verifyAndShow(email);
-  });
-
-  // "Set or reset your password" — email a set-password link to the address typed
-  // above (works for both new/auto-provisioned and existing accounts).
+  // ── Password reset (Brevo-delivered via Supabase Auth SMTP) ─────────────────
   resetLink.addEventListener('click', async function (e) {
     e.preventDefault();
-    const email = emailEl.value.trim().toLowerCase();
-    if (!email) { showError('Enter your email above first, then click the link.'); return; }
-    await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/account',
-    });
-    errorEl.hidden = true;
-    resultEl.hidden = false;
-    badgeEl.hidden = true;
+    const email = (loginForm.hidden ? suEmail.value : emailEl.value).trim().toLowerCase();
+    if (!email) { showError(errorEl, 'Enter your email first, then click the link.'); return; }
+    await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/account' });
+    hideAuth();
+    resultEl.hidden = false; badgeEl.hidden = true; keyBox.hidden = true;
     resultMsg.textContent = 'Check your email for a link to set your password.';
     resultActions.innerHTML = '';
+    document.querySelector('.hub-signout').hidden = true;
+  });
+
+  // ── Set password (arriving from a reset / set-password email link) ──────────
+  supabase.auth.onAuthStateChange(function (event) {
+    if (event === 'PASSWORD_RECOVERY') {
+      hideAuth(); resultEl.hidden = true; setPwForm.hidden = false;
+    }
+  });
+  setPwForm.addEventListener('submit', async function (e) {
+    e.preventDefault(); setPwError.hidden = true;
+    const pw = newPasswordEl.value;
+    if (!pw || pw.length < 8) { showError(setPwError, 'Use at least 8 characters.'); return; }
+    setPwBtn.disabled = true; setPwBtn.textContent = 'Saving…';
+    const upd = await supabase.auth.updateUser({ password: pw });
+    if (upd.error) {
+      setPwBtn.disabled = false; setPwBtn.textContent = 'Set password & continue';
+      showError(setPwError, upd.error.message || 'Could not set your password.'); return;
+    }
+    const who = await supabase.auth.getUser();
+    const email = ((who.data && who.data.user && who.data.user.email) || '').toLowerCase();
+    await verifyAndShow(email);
+  });
+
+  // ── Sign out ────────────────────────────────────────────────────────────────
+  signOutLink.addEventListener('click', async function (e) {
+    e.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = '/account';
+  });
+
+  // ── On load: if already signed in, go straight to the hub ───────────────────
+  supabase.auth.getSession().then(async ({ data }) => {
+    if (data && data.session && data.session.user) {
+      const email = (data.session.user.email || '').toLowerCase();
+      await verifyAndShow(email);
+    }
   });
 </script>
 

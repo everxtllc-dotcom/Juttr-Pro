@@ -49,6 +49,14 @@ export default async function handler(req, res) {
   params.append('line_items[0][price]', price);
   params.append('line_items[0][quantity]', '1');
 
+  // If the buyer is a signed-in account holder, bind the Stripe customer to their
+  // exact account email (lowercased). This keeps the Stripe customer and the
+  // Supabase account in sync and avoids the case-sensitive email-lookup gap.
+  const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+  if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    params.append('customer_email', email);
+  }
+
   // Stripe rejects a session that sets BOTH `discounts[]` and
   // `allow_promotion_codes` — they are mutually exclusive, so send exactly one.
   // The auto-applied intro coupon wins; if it isn't configured, fall back to

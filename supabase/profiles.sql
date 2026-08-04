@@ -42,6 +42,14 @@ alter table public.profiles add column if not exists plan_interval text;
 -- or being shared as email + `sub_…` with everyone. See api/check-user.js.
 alter table public.profiles add column if not exists devices jsonb not null default '[]'::jsonb;
 
+-- Opt-in marketing consent. Set only when the user ticks the "email me updates" box
+-- at sign-up (the box is unticked by default). `marketing_opt_in_at` records WHEN
+-- consent was given, which GDPR expects you to be able to show. Users who never
+-- sign up are never here at all. Written by the signup trigger below; cleared when
+-- a user unsubscribes.
+alter table public.profiles add column if not exists marketing_opt_in boolean not null default false;
+alter table public.profiles add column if not exists marketing_opt_in_at timestamptz;
+
 -- Activation secret for MANUALLY GRANTED ('lifetime') accounts only.
 --
 -- Paying customers activate with their Stripe Subscription ID (`sub_…`), which
@@ -91,9 +99,14 @@ returns trigger
 language plpgsql
 security definer set search_path = public
 as $$
+declare
+  opt_in boolean := coalesce((new.raw_user_meta_data ->> 'marketing_opt_in')::boolean, false);
 begin
-  insert into public.profiles (id, email)
-  values (new.id, new.email)
+  -- Carry the marketing-consent checkbox from sign-up (supabase.auth.signUp passed
+  -- it in options.data → raw_user_meta_data). Default false when absent (Google
+  -- sign-in, or the box left unticked).
+  insert into public.profiles (id, email, marketing_opt_in, marketing_opt_in_at)
+  values (new.id, new.email, opt_in, case when opt_in then now() else null end)
   on conflict (id) do nothing;
   return new;
 end;
