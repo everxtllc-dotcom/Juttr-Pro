@@ -27,7 +27,7 @@
     </div>
     <h1 class="hero-title" style="font-size: clamp(30px, 5vw, 46px);">You're Pro now. 🎉</h1>
     <p class="hero-sub" style="margin-bottom: 28px;">
-      Thanks for upgrading. Your <strong>license key is your Stripe Subscription ID</strong>
+      Thanks for upgrading. Your <strong>License Key</strong>
       (it starts with <code>sub_</code>). Copy it below, then paste it into Juttr →
       <strong>Settings → Subscription</strong> to activate Pro.
     </p>
@@ -39,7 +39,7 @@
         <button class="btn btn-accent btn-sm" id="copyKey" type="button" hidden>Copy</button>
       </div>
       <p class="license-hint" id="licenseHint">
-        Also in your Stripe receipt email, or anytime at
+        Also in your receipt email, or anytime at
         <a href="/account">your account</a>.
       </p>
     </div>
@@ -90,18 +90,14 @@
 
     // Fallback when we can't create a portal session directly (email unknown or
     // /api/create-portal errors). Sending the user to /account lets them log in
-    // and open a real portal session. If you'd rather use Stripe's hosted
-    // email-login page, set this to your Customer Portal login link from the
-    // Stripe Dashboard (Settings → Billing → Customer portal → Login link),
-    // e.g. 'https://billing.stripe.com/p/login/xxxxxxxx'. The bare
-    // 'https://billing.stripe.com/p/login' is NOT valid and Stripe rejects it.
+    // and open a real portal session.
     const GENERIC_PORTAL = '/account';
 
-    // "Manage billing" → open the Stripe Customer Portal. When we know the
+    // "Manage billing" → open the hosted billing portal. When we know the
     // customer's email (resolved from the checkout session below) we go straight
-    // in via /api/create-portal; otherwise fall back to the generic email-login
-    // portal. Same-tab redirect avoids popup blockers, and the portal's
-    // return_url brings the user back to the site.
+    // in via /api/create-portal; otherwise fall back to /account. Same-tab
+    // redirect avoids popup blockers, and the portal's return_url brings the
+    // user back to the site.
     manageBtn.addEventListener('click', async () => {
       if (!customerEmail) { window.location.href = GENERIC_PORTAL; return; }
       manageBtn.disabled = true;
@@ -136,7 +132,7 @@
 
     if (!sessionId) {
       keyEl.textContent = 'sub_…';
-      hintEl.textContent = 'Find it in your Stripe receipt email — it starts with sub_.';
+      hintEl.textContent = 'Find it in your receipt email — it starts with sub_.';
       return;
     }
 

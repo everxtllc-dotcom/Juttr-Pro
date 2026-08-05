@@ -79,9 +79,10 @@
       <p class="switch"><a href="#" id="resetLink">Forgot your password?</a></p>
     </div>
 
-    <p class="hero-sub" id="skipLine" style="font-size: 13px; margin-top: 16px;" hidden>
-      <a href="#" id="skipInstall">Skip — just install the extension →</a>
-    </p>
+    <div id="skipLine" style="margin-top: 16px;" hidden>
+      <a href="#" class="btn btn-ghost btn-lg" id="skipInstall" style="width: 100%;">Skip — just install the extension →</a>
+      <p class="hero-sub" style="font-size: 12.5px; margin-top: 8px; opacity: 0.7;">No account needed to use Juttr free.</p>
+    </div>
 
     <!-- Set password (arriving from a reset / set-password email link) -->
     <form class="account-box" id="setPwForm" hidden>
@@ -230,8 +231,19 @@
   const setPwBtn = document.getElementById('setPwBtn');
   const setPwError = document.getElementById('setPwError');
 
-  // When we arrived from an install nudge, offer a no-account way through.
-  if (nextAction === 'install') { skipLine.hidden = false; }
+  // Arriving from a CTA (?next=): default to sign-up and tailor the copy. Free
+  // ("install") also gets a prominent Skip so no account is ever forced. Pro
+  // ("checkout") requires the account first, then continues to checkout.
+  if (nextAction === 'install') {
+    skipLine.hidden = false;
+    setMode('signup');
+    pageTitle.textContent = 'Create your free account';
+    pageSub.textContent = 'Save your license key, download the handbook, and manage Pro — or skip and just install.';
+  } else if (nextAction === 'checkout') {
+    setMode('signup');
+    pageTitle.textContent = 'Create your account to go Pro';
+    pageSub.textContent = 'Set up your account with an email and password, then continue to secure checkout.';
+  }
   skipInstall.addEventListener('click', function (e) {
     e.preventDefault(); window.location.href = CHROME_STORE_URL;
   });
